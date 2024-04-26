@@ -31,5 +31,6 @@ typedef struct {
 } arena_t;
 int corewar(int argc, char const **argv);
 int execute_next_inst(arena_t *arena, program_t *program);
+uint8_t *decode_cb(arena_t *arena, uint32_t address);
 uint32_t read_uint32(arena_t *arena, uint32_t address);
 #endif //COREWAR_COREWAR_H

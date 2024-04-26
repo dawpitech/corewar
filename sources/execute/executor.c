@@ -21,11 +21,19 @@ int execute_live(arena_t *arena, program_t *program)
     return EXIT_SUCCESS_TECH;
 }
 
+static
+int execute_ld(arena_t *arena, program_t *program)
+{
+
+}
+
 int execute_next_inst(arena_t *arena, program_t *program)
 {
     switch (arena->ram[program->program_counter]) {
         case 1:
             return execute_live(arena, program);
+        case 2:
+            return execute_ld(arena, program);
         default:
             return EXIT_FAILURE_TECH;
     }

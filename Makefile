@@ -36,6 +36,7 @@ SRC	=	./sources/corewar.c
 SRC	+=	./sources/op.c
 SRC	+=	./sources/utils/reader.c
 SRC	+=	./sources/execute/executor.c
+SRC	+=	./sources/execute/decoder.c
 
 T_SRC	:=	$(SRC)
 
