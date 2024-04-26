@@ -19,7 +19,7 @@ typedef struct {
     uint32_t program_counter;
     int32_t registers[REG_NUMBER];
     uint8_t cycles_before_next_instruction;
-    uint8_t cycles_before_die;
+    uint32_t cycles_before_die;
     uint8_t carry_bit;
     bool is_dead;
 } program_t;
