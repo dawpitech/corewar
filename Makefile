@@ -34,6 +34,8 @@ T_NAME	=	unit_tests
 
 SRC	=	./sources/corewar.c
 SRC	+=	./sources/op.c
+SRC	+=	./sources/utils/reader.c
+SRC	+=	./sources/execute/executor.c
 
 T_SRC	:=	$(SRC)
 

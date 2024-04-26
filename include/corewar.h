@@ -30,4 +30,6 @@ typedef struct {
     program_t programs[MAX_ARGS_NUMBER];
 } arena_t;
 int corewar(int argc, char const **argv);
+int execute_next_inst(arena_t *arena, program_t *program);
+uint32_t read_uint32(arena_t *arena, uint32_t address);
 #endif //COREWAR_COREWAR_H
