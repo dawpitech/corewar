@@ -61,7 +61,7 @@ dkms.conf
 .buildTests/
 
 # Custom
-asm
+corewar
 unit_tests
 *.log
 *.cor
