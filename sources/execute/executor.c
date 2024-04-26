@@ -37,4 +37,5 @@ int execute_next_inst(arena_t *arena, program_t *program)
         default:
             return EXIT_FAILURE_TECH;
     }
+    return EXIT_SUCCESS_TECH;
 }
