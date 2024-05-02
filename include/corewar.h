@@ -7,6 +7,7 @@
 
 #include <stdint.h>
 #include <stdbool.h>
+#include <stdio.h>
 
 #include "op.h"
 
@@ -22,6 +23,8 @@ typedef struct {
     uint32_t cycles_before_die;
     uint8_t carry_bit;
     bool is_dead;
+    FILE *fp;
+    long size;
 } program_t;
 typedef struct {
     uint8_t cycle_to_dump;

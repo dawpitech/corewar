@@ -35,6 +35,7 @@ T_NAME	=	unit_tests
 SRC	=	./sources/corewar.c
 SRC	+=	./sources/op.c
 SRC	+=	./sources/arguments.c
+SRC	+=	./sources/arena.c
 SRC	+=	./sources/utils/reader.c
 SRC	+=	./sources/execute/executor.c
 SRC	+=	./sources/execute/decoder.c

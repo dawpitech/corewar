@@ -18,6 +18,7 @@
     #define NULL_MSG "(NULL)"
 
 int nbr_len(long long nb);
+void my_memcpy(void *src, size_t size, void *dest);
 int my_putfloat(double nb, int precision);
 void my_memset(void *buf, int val, long size);
 char **my_str_to_word_array(char const *);

@@ -8,6 +8,7 @@
 #include "corewar.h"
 #include "arguments.h"
 #include "my.h"
+#include "arena.h"
 
 int corewar(int argc, char const **argv)
 {
@@ -19,5 +20,8 @@ int corewar(int argc, char const **argv)
     arena.cycle_to_dump = -1;
     if (parse_arguments(argc, argv, &arena))
         return EXIT_FAILURE_TECH;
+    if (create_arena_memory(&arena))
+        return EXIT_FAILURE_TECH;
+    free_arena(&arena);
     return EXIT_SUCCESS_TECH;
 }

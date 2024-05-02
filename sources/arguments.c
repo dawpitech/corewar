@@ -9,6 +9,7 @@
 #include "corewar.h"
 #include "arguments.h"
 #include "my.h"
+#include "op.h"
 #include <stdio.h>
 
 int print_help(void)
@@ -49,6 +50,17 @@ static int get_nbr_or_addr(const char **argv, int *i, long *nbr, long *addr)
     return 0;
 }
 
+static int find_place(arena_t *arena, long *nbr)
+{
+    for (int i = 0; i < MAX_ARGS_NUMBER; i++) {
+        if (arena->programs[i].name == NULL) {
+            *nbr = i;
+            return 1;
+        }
+    }
+    return 1;
+}
+
 static int parse_program(int argc, const char **argv, arena_t *arena, int *i)
 {
     long nbr = 0;
@@ -58,10 +70,11 @@ static int parse_program(int argc, const char **argv, arena_t *arena, int *i)
         if ((my_strcmp(argv[*i], "-n") == 0 || my_strcmp(argv[*i], "-a") == 0)
             && ((*i + 1) >= argc || !is_nbr_valid(argv[*i + 1])))
             return 1;
-        if (get_nbr_or_addr(argv, i, &nbr, &addr))
+        if (find_place(arena, &nbr) && get_nbr_or_addr(argv, i, &nbr, &addr))
             continue;
         if (arena->programs[nbr].name != NULL)
             return 1;
+        arena->programs_count++;
         arena->programs[nbr].name = my_strdup(argv[*i]);
         arena->programs[nbr].program_counter = addr;
         break;

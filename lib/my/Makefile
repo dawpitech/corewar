@@ -23,6 +23,7 @@ BDIR	=	.build
 
 VPATH = .
 SRC = my_compute_power_rec.c
+SRC += my_memcpy.c
 SRC += my_compute_square_root.c
 SRC += memory_utils.c
 SRC += extra_modifiers.c
