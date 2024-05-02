@@ -24,7 +24,7 @@ int execute_live(arena_t *arena, program_t *program)
 static
 int execute_ld(arena_t *arena, program_t *program)
 {
-
+    return 0;
 }
 
 int execute_next_inst(arena_t *arena, program_t *program)

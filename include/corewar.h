@@ -24,6 +24,7 @@ typedef struct {
     bool is_dead;
 } program_t;
 typedef struct {
+    uint8_t cycle_to_dump;
     uint8_t current_cycle;
     uint8_t ram[MEM_SIZE];
     uint8_t programs_count;

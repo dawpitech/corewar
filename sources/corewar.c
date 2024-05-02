@@ -5,8 +5,10 @@
 ** corewar header
 */
 
+#include <stddef.h>
 #include "corewar.h"
 #include "my.h"
+#include <stdio.h>
 #include "op.h"
 
 static int print_help(void)
@@ -24,9 +26,77 @@ static int print_help(void)
     return EXIT_SUCCESS_TECH;
 }
 
+static int is_nbr_valid(const char *nbr)
+{
+    for (int i = 0; nbr[i] != '\0'; i++)
+        if (!IS_NUM(nbr[i]))
+            return 0;
+    return 1;
+}
+
+static int get_nbr_or_addr(const char **argv, int *i, long *nbr, long *addr)
+{
+    if (my_strcmp(argv[*i], "-n") == 0) {
+        *nbr = my_getnbr(argv[*i + 1]);
+        *i += 2;
+        return 1;
+    }
+    if (my_strcmp(argv[*i], "-a") == 0) {
+        *addr = my_getnbr(argv[*i + 1]);
+        *i += 2;
+        return 1;
+    }
+    return 0;
+}
+
+static int parse_program(int argc, const char **argv, arena_t *arena, int *i)
+{
+    long nbr = 0;
+    long addr = 0;
+
+    while (*i < argc) {
+        if ((my_strcmp(argv[*i], "-n") == 0 || my_strcmp(argv[*i], "-a") == 0)
+            && ((*i + 1) >= argc || !is_nbr_valid(argv[*i + 1])))
+            return 1;
+        if (get_nbr_or_addr(argv, i, &nbr, &addr))
+            continue;
+        if (arena->programs[nbr].name != NULL)
+            return 1;
+        arena->programs[nbr].name = my_strdup(argv[*i]);
+        arena->programs[nbr].program_counter = addr;
+        break;
+    }
+    return 0;
+}
+
+static int parse_arguments(int argc, const char **argv, arena_t *arena)
+{
+    int i = 1;
+
+    while (i < argc) {
+        if (my_strcmp(argv[i], "-dump") == 0 && (i + 1) >= argc)
+            return 1;
+        if (my_strcmp(argv[i], "-dump") == 0) {
+            arena->cycle_to_dump = my_getnbr(argv[i + 1]);
+            i += 2;
+            continue;
+        }
+        if (parse_program(argc, argv, arena, &i))
+            return 1;
+        ++i;
+    }
+    return 0;
+}
+
 int corewar(int argc, char const **argv)
 {
+    arena_t arena;
+
     if (argc == 2 && my_strcmp(argv[1], "-h") == 0)
         return print_help();
+    my_memset(&arena, 0, sizeof(arena_t));
+    arena.cycle_to_dump = -1;
+    if (parse_arguments(argc, argv, &arena))
+        return EXIT_FAILURE_TECH;
     return EXIT_SUCCESS_TECH;
 }
