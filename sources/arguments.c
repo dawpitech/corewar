@@ -77,6 +77,7 @@ static int parse_program(int argc, const char **argv, arena_t *arena, int *i)
         arena->programs_count++;
         arena->programs[nbr].name = my_strdup(argv[*i]);
         arena->programs[nbr].program_counter = addr;
+        arena->programs[nbr].cycles_before_die = CYCLE_TO_DIE;
         break;
     }
     return 0;
@@ -86,6 +87,8 @@ int parse_arguments(int argc, const char **argv, arena_t *arena)
 {
     int i = 1;
 
+    if (argc <= 1)
+        return 1;
     while (i < argc) {
         if (my_strcmp(argv[i], "-dump") == 0 && (i + 1) >= argc)
             return 1;

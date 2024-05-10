@@ -19,18 +19,19 @@ typedef struct {
     char *name;
     uint32_t program_counter;
     int32_t registers[REG_NUMBER];
-    uint8_t cycles_before_next_instruction;
-    uint32_t cycles_before_die;
+    long cycles_before_next_instruction;
+    long cycles_before_die;
     uint8_t carry_bit;
     bool is_dead;
     FILE *fp;
     long size;
 } program_t;
 typedef struct {
-    uint8_t cycle_to_dump;
-    uint8_t current_cycle;
+    long cycle_to_dump;
+    long current_cycle;
     uint8_t ram[MEM_SIZE];
     uint8_t programs_count;
+    int exit_code;
     program_t programs[MAX_ARGS_NUMBER];
 } arena_t;
 int corewar(int argc, char const **argv);

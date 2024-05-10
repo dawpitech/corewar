@@ -39,6 +39,7 @@ static const command_t func_map[] = {
     {.command = 'i', .fptr = percent_d},
     {.command = 'o', .fptr = percent_d},
     {.command = 'x', .fptr = percent_d},
+    {.command = 'X', .fptr = percent_d},
     {.command = 'b', .fptr = percent_d},
     {.command = 'f', .fptr = percent_f},
     {.command = 'F', .fptr = percent_f},
