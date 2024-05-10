@@ -8,6 +8,7 @@
 #include "corewar.h"
 #include "op.h"
 #include "my.h"
+#include "my_printf.h"
 #include <stdint.h>
 
 static
@@ -21,6 +22,8 @@ int execute_live(arena_t *arena, program_t *program)
         return EXIT_FAILURE_TECH;
     program->program_counter += 4;
     arena->programs[prog_id].cycles_before_die = CYCLE_TO_DIE;
+    my_printf("The player %d(%s) is alive.\n", prog_id,
+        arena->programs[prog_id].name);
     return EXIT_SUCCESS_TECH;
 }
 

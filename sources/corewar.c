@@ -89,7 +89,8 @@ int corewar(int argc, char const **argv)
     if (create_arena_memory(&arena))
         return EXIT_FAILURE_TECH;
     while (run_cycle(&arena) != 1);
-    my_printf("The winner is: %s\n", arena.programs[find_winner(&arena)].name);
+    my_printf("The player %d(%s) has won.\n", find_winner(&arena),
+        arena.programs[find_winner(&arena)].name);
     ret = arena.exit_code;
     free_arena(&arena);
     return ret;
