@@ -18,3 +18,13 @@ uint32_t read_uint32(arena_t *arena, uint32_t address)
     return (arena->ram[address] | (arena->ram[address + 1] << 8) |
         (arena->ram[address + 2] << 16) | (arena->ram[address + 3] << 24));
 }
+
+uint8_t read_uint8(arena_t *arena, uint32_t address)
+{
+    return (arena->ram[address]);
+}
+
+uint16_t read_uint16(arena_t *arena, uint32_t address)
+{
+    return (arena->ram[address] | (arena->ram[address + 1] << 8));
+}

@@ -18,6 +18,7 @@ CFLAGS	+=	-Wno-unknown-pragmas
 CFLAGS	+=	-Wno-dangling-pointer
 CFLAGS	+=	-pedantic
 CFLAGS	+=	-I./include/
+CFLAGS	+=	-MMD -MP
 
 T_CFLAGS	:= $(CFLAGS)
 T_CFLAGS	+=	-g3
@@ -39,6 +40,7 @@ SRC	+=	./sources/arena.c
 SRC	+=	./sources/utils/reader.c
 SRC	+=	./sources/execute/executor.c
 SRC	+=	./sources/execute/decoder.c
+SRC	+=	./sources/decoder/instruction_decoder.c
 
 T_SRC	:=	$(SRC)
 
@@ -47,9 +49,15 @@ SRC	+=	./main.c
 GCOVR_OUTPUT = gcovr
 
 OBJ	=	$(SRC:%.c=$(BDIR)/%.o)
+DEPS	=	$(OBJ:%.o=%.d)
+
 T_OBJ	=	$(T_SRC:%.c=$(T_BDIR)/%.o)
+T_DEPS	=	$(T_OBJ:%.o=%.d)
 
 all:	$(NAME)
+
+-include $(DEPS)
+-include $(T_DEPS)
 
 $(NAME):	build_lib $(OBJ)
 	$(CC) $(OBJ) $(CFLAGS) -o $(NAME) $(LIBS_FLAGS)
@@ -91,6 +99,7 @@ fclean:	clean
 	@ rm -f $(T_NAME)
 	@ make -C ./lib/my/ fclean
 
+.NOTPARALLEL: re
 re:	fclean all
 
 .PHONY : all asan tests_run_pp tests_run build_lib clean fclean re
