@@ -28,6 +28,7 @@ static int copy_champs_internal(arena_t *arena, int i, char *buff,
         my_memcpy(buff, arena->programs[i].size - sizeof(header_t),
             &arena->ram[*last_addr]);
         arena->programs[i].program_counter = *last_addr;
+        free(buff);
         return 1;
     }
     free(buff);
@@ -42,8 +43,10 @@ static int init_copy(char **buff, int i, arena_t *arena)
         return 1;
     fread(*buff, arena->programs[i].size, 1, arena->programs[i].fp);
     if (arena->programs[i].program_counter != 0 &&
-        arena->programs[i].program_counter >= MEM_SIZE)
+        arena->programs[i].program_counter >= MEM_SIZE) {
+        free(*buff);
         return 1;
+    }
     return 0;
 }
 
@@ -114,6 +117,21 @@ void free_arena(arena_t *arena)
         if (arena->programs[i].name == NULL)
             continue;
         free(arena->programs[i].name);
+        if (arena->programs[i].fp != NULL)
+            fclose(arena->programs[i].fp);
     }
     free(arena->programs);
+}
+
+int create_arena(arena_t *arena)
+{
+    my_memset(arena, 0, sizeof(arena_t));
+    arena->cycle_to_dump = -1;
+    arena->exit_code = EXIT_SUCCESS_TECH;
+    arena->programs = malloc(sizeof(program_t) * MAX_ARGS_NUMBER);
+    if (arena->programs == NULL)
+        return 1;
+    for (int i = 0; i < MAX_ARGS_NUMBER; i++)
+        my_memset(&arena->programs[i], 0, sizeof(program_t));
+    return 0;
 }

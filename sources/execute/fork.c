@@ -38,9 +38,9 @@ int execute_fork(arena_t *arena, program_t *program)
     addr = program->program_counter + addr % IDX_MOD;
     arena->programs = my_realloc(arena->programs,
         sizeof(program_t) * (arena->programs_count + 1),
-	sizeof(arena_t) * arena->programs_count);
+        sizeof(arena_t) * arena->programs_count);
     my_memcpy(&arena->programs[arena->programs_count],
-	      sizeof(program_t), &arena->programs[arena->programs_count + 1]);
+        sizeof(program_t), &arena->programs[arena->programs_count + 1]);
     arena->programs_count++;
     arena->programs[arena->programs_count - 1].program_counter = addr;
     return 0;
@@ -55,9 +55,9 @@ int execute_lfork(arena_t *arena, program_t *program)
     addr = program->program_counter + addr;
     arena->programs = my_realloc(arena->programs,
         sizeof(program_t) * (arena->programs_count + 1),
-	sizeof(arena_t) * arena->programs_count);
+        sizeof(arena_t) * arena->programs_count);
     my_memcpy(&arena->programs[arena->programs_count],
-	      sizeof(program_t), &arena->programs[arena->programs_count + 1]);
+        sizeof(program_t), &arena->programs[arena->programs_count + 1]);
     arena->programs_count++;
     arena->programs[arena->programs_count - 1].program_counter = addr;
     return 0;

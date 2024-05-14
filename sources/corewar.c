@@ -82,11 +82,7 @@ int corewar(int argc, char const **argv)
 
     if (argc == 2 && my_strcmp(argv[1], "-h") == 0)
         return print_help();
-    my_memset(&arena, 0, sizeof(arena_t));
-    arena.cycle_to_dump = -1;
-    arena.exit_code = EXIT_SUCCESS_TECH;
-    arena.programs = malloc(sizeof(program_t) * MAX_ARGS_NUMBER);
-    if (arena.programs == NULL || parse_arguments(argc, argv, &arena))
+    if (create_arena(&arena) || parse_arguments(argc, argv, &arena))
         return EXIT_FAILURE_TECH;
     if (create_arena_memory(&arena))
         return EXIT_FAILURE_TECH;

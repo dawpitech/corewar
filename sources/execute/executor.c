@@ -113,12 +113,14 @@ int execute_aff(arena_t *arena, program_t *program)
 static
 int execute_xor(arena_t *arena, program_t *program)
 {
-    instruct_infos_t *infos = decode_instruction(arena, &program->program_counter);
+    instruct_infos_t *infos = decode_instruction(arena,
+        &program->program_counter);
     int32_t a;
     int32_t b;
     int32_t and_result;
 
-    if (infos == NULL || infos->params[2].size != T_REG || infos->params[2].value > REG_NUMBER)
+    if (infos == NULL || infos->params[2].size != T_REG ||
+        infos->params[2].value > REG_NUMBER)
         return 1;
     a = infos->params[0].value;
     b = infos->params[1].value;
@@ -137,12 +139,14 @@ int execute_xor(arena_t *arena, program_t *program)
 static
 int execute_or(arena_t *arena, program_t *program)
 {
-    instruct_infos_t *infos = decode_instruction(arena, &program->program_counter);
+    instruct_infos_t *infos = decode_instruction(arena,
+        &program->program_counter);
     int32_t a;
     int32_t b;
     int32_t and_result;
 
-    if (infos == NULL || infos->params[2].size != T_REG || infos->params[2].value > REG_NUMBER)
+    if (infos == NULL || infos->params[2].size != T_REG ||
+        infos->params[2].value > REG_NUMBER)
         return 1;
     a = infos->params[0].value;
     b = infos->params[1].value;
@@ -161,12 +165,14 @@ int execute_or(arena_t *arena, program_t *program)
 static
 int execute_sub(arena_t *arena, program_t *program)
 {
-    instruct_infos_t *infos = decode_instruction(arena, &program->program_counter);
+    instruct_infos_t *infos = decode_instruction(arena,
+        &program->program_counter);
     int32_t a;
     int32_t b;
     int32_t and_result;
 
-    if (infos == NULL || infos->params[2].size != T_REG || infos->params[2].value > REG_NUMBER)
+    if (infos == NULL || infos->params[2].size != T_REG ||
+        infos->params[2].value > REG_NUMBER)
         return 1;
     a = infos->params[0].value;
     b = infos->params[1].value;
@@ -185,12 +191,14 @@ int execute_sub(arena_t *arena, program_t *program)
 static
 int execute_add(arena_t *arena, program_t *program)
 {
-    instruct_infos_t *infos = decode_instruction(arena, &program->program_counter);
+    instruct_infos_t *infos = decode_instruction(arena,
+        &program->program_counter);
     int32_t a;
     int32_t b;
     int32_t and_result;
 
-    if (infos == NULL || infos->params[2].size != T_REG || infos->params[2].value > REG_NUMBER)
+    if (infos == NULL || infos->params[2].size != T_REG ||
+        infos->params[2].value > REG_NUMBER)
         return 1;
     a = infos->params[0].value;
     b = infos->params[1].value;
@@ -209,12 +217,14 @@ int execute_add(arena_t *arena, program_t *program)
 static
 int execute_and(arena_t *arena, program_t *program)
 {
-    instruct_infos_t *infos = decode_instruction(arena, &program->program_counter);
+    instruct_infos_t *infos = decode_instruction(arena,
+        &program->program_counter);
     int32_t a;
     int32_t b;
     int32_t and_result;
 
-    if (infos == NULL || infos->params[2].size != T_REG || infos->params[2].value > REG_NUMBER)
+    if (infos == NULL || infos->params[2].size != T_REG ||
+        infos->params[2].value > REG_NUMBER)
         return 1;
     a = infos->params[0].value;
     b = infos->params[1].value;

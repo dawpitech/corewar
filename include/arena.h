@@ -10,3 +10,4 @@
 
 int create_arena_memory(arena_t *arena);
 void free_arena(arena_t *arena);
+int create_arena(arena_t *arena);
