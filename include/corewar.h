@@ -48,6 +48,7 @@ typedef struct {
 } instruct_params_t;
 int corewar(int argc, char const **argv);
 int execute_next_inst(arena_t *arena, program_t *program);
+void write_bytes(long num, int byte_nb, uint32_t address, arena_t *arena);
 uint8_t *decode_cb(arena_t *arena, uint32_t address);
 uint8_t read_uint8(arena_t *arena, uint32_t address);
 uint16_t read_uint16(arena_t *arena, uint32_t address);

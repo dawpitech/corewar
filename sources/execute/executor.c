@@ -9,7 +9,10 @@
 #include "op.h"
 #include "my.h"
 #include "my_printf.h"
+#include <endian.h>
 #include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 static
 int execute_live(arena_t *arena, program_t *program)
@@ -17,7 +20,7 @@ int execute_live(arena_t *arena, program_t *program)
     uint8_t prog_id;
 
     program->program_counter += 1;
-    prog_id = read_uint32(arena, program->program_counter + 1);
+    prog_id = read_uint32(arena, program->program_counter);
     if (prog_id > MAX_ARGS_NUMBER)
         return EXIT_FAILURE_TECH;
     program->program_counter += 4;
@@ -33,6 +36,21 @@ int execute_ld(arena_t *arena, program_t *program)
     return 0;
 }
 
+static
+int execute_sti(arena_t *arena, program_t *program)
+{
+    uint32_t tmp = program->program_counter;
+    instruct_params_t *params = decode_instruction(arena,
+        &program->program_counter);
+
+    if (params == NULL)
+        return 1;
+    write_bytes(program->registers[params->p1_value - 1], 4,
+                tmp + (params->p2_value + params->p3_value) % IDX_MOD, arena);
+    free(params);
+    return 0;
+}
+
 int find_opcode(uint8_t name)
 {
     for (int i = 0; op_tab[i].mnemonique != 0; i++)
@@ -43,10 +61,13 @@ int find_opcode(uint8_t name)
 
 int execute_inst(int i, arena_t *arena, program_t *program)
 {
+    program->cycles_before_next_instruction = op_tab[i].nbr_cycles;
     if (my_strcmp(op_tab[i].mnemonique, "live") == 0)
         return execute_live(arena, program);
     if (my_strcmp(op_tab[i].mnemonique, "ld") == 0)
         return execute_ld(arena, program);
+    if (my_strcmp(op_tab[i].mnemonique, "sti") == 0)
+        return execute_sti(arena, program);
     return EXIT_FAILURE_TECH;
 }
 

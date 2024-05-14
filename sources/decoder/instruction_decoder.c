@@ -26,7 +26,8 @@ int read_value(arena_t *arena, uint32_t address, size_t size)
 }
 
 static
-void read_params(arena_t *arena, uint32_t *address, instruct_params_t *params, const uint8_t *params_type)
+void read_params(arena_t *arena, uint32_t *address,
+    instruct_params_t *params, const uint8_t *params_type)
 {
     params->p1_size = params_type[0];
     params->p1_value = read_value(arena, *address, params->p1_size);
@@ -44,7 +45,7 @@ void read_params(arena_t *arena, uint32_t *address, instruct_params_t *params, c
 
 instruct_params_t *decode_instruction(arena_t *arena, uint32_t *address)
 {
-    instruct_params_t *params = calloc(1, sizeof(instruct_params_t));
+    instruct_params_t *params = malloc(sizeof(instruct_params_t));
     uint8_t *params_type;
 
     params->instruction = read_uint8(arena, *address);

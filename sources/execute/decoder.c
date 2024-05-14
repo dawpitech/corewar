@@ -6,8 +6,10 @@
 */
 
 #include <malloc.h>
+#include <stdint.h>
 
 #include "corewar.h"
+#include "op.h"
 
 uint8_t *decode_cb(arena_t *arena, uint32_t address)
 {
