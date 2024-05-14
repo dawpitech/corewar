@@ -40,28 +40,27 @@ static
 int execute_sti(arena_t *arena, program_t *program)
 {
     uint32_t tmp = program->program_counter;
-    instruct_params_t *params = decode_instruction(arena,
-        &program->program_counter);
+    instruct_infos_t *infos = decode_instruction(arena, &program->program_counter);
 
-    if (params == NULL)
+    if (infos == NULL)
         return 1;
-    write_bytes(program->registers[params->p1_value - 1], 4,
-                tmp + (params->p2_value + params->p3_value) % IDX_MOD, arena);
-    free(params);
+    write_bytes(program->registers[infos->params[0].value - 1], 4,
+                tmp + (infos->params[1].value + infos->params[2].value) % IDX_MOD, arena);
+    free(infos);
     return 0;
 }
 
 static
 int execute_aff(arena_t *arena, program_t *program)
 {
-    instruct_params_t *params = decode_instruction(arena, &program->program_counter);
+    instruct_infos_t *infos = decode_instruction(arena, &program->program_counter);
     char chr;
 
-    if (params == NULL)
+    if (infos == NULL)
         return 1;
-    if (params->p1_size != REG_SIZE || params->p1_value > REG_NUMBER)
+    if (infos->params[0].size != REG_SIZE || infos->params[0].value > REG_NUMBER)
         return 1;
-    chr = (char) (program->registers[params->p1_value - 1] % 256);
+    chr = (char) (program->registers[infos->params[0].value - 1] % 256);
     write(STDOUT_FILENO, &chr,1);
     return 0;
 }

@@ -17,6 +17,7 @@ int read_value(arena_t *arena, uint32_t address, size_t size)
         case 1:
             return (int) read_uint8(arena, address);
         case 2:
+            return (int) htobe16(read_uint16(arena, address));
         case 4:
             return (int) htobe32(read_uint32(arena, address));
         default:
@@ -26,33 +27,47 @@ int read_value(arena_t *arena, uint32_t address, size_t size)
 
 static
 void read_params(arena_t *arena, uint32_t *address,
-    instruct_params_t *params, const uint8_t *params_type)
+    instruct_infos_t *params, bool is_index)
 {
-    params->p1_size = params_type[0];
-    params->p1_value = read_value(arena, *address, params->p1_size);
-    *address += params->p1_size;
-    params->p2_size = params_type[1];
-    params->p2_value = read_value(arena, *address, params->p2_size);
-    *address += params->p2_size;
-    params->p3_size = params_type[2];
-    params->p3_value = read_value(arena, *address, params->p3_size);
-    *address += params->p3_size;
-    params->p4_size = params_type[3];
-    params->p4_value = read_value(arena, *address, params->p4_size);
-    *address += params->p4_size;
+    uint8_t *params_type = decode_cb(arena, *address);
+    size_t size_to_read;
+
+    *address += 1;
+    for (int i = 0; i < 4; i++) {
+        size_to_read = params_type[i];
+        if (!is_index && size_to_read == T_DIR)
+            size_to_read = T_IND;
+        params->params[i].value = read_value(arena, *address, size_to_read);
+        params->params[i].size = size_to_read;
+        *address += size_to_read;
+    }
+    free(params_type);
 }
 
-instruct_params_t *decode_instruction(arena_t *arena, uint32_t *address)
+static
+bool is_index_instruction(instruct_infos_t *infos)
 {
-    instruct_params_t *params = malloc(sizeof(instruct_params_t));
-    uint8_t *params_type;
+    return (infos->instruction == 0x0A || infos->instruction == 0x0B || infos->instruction == 0x0E);
+}
 
-    params->instruction = read_uint8(arena, *address);
+instruct_infos_t *decode_instruction(arena_t *arena, uint32_t *address)
+{
+    instruct_infos_t *infos = malloc(sizeof(instruct_infos_t));
+
+    infos->instruction = read_uint8(arena, *address);
     *address += 1;
-    params->coding_byte = read_uint8(arena, *address);
-    params_type = decode_cb(arena, *address);
-    *address += 1;
-    read_params(arena, address, params, params_type);
-    free(params_type);
-    return params;
+    infos->coding_byte = read_uint8(arena, *address);
+    read_params(arena, address, infos, is_index_instruction(infos));
+    printf("Read instruction 0x%X, CB: %X, %d (%zu bytes), %d (%zu bytes), %d (%zu bytes), %d (%zu bytes)\n",
+        infos->instruction,
+        infos->coding_byte,
+        infos->params[0].value,
+        infos->params[0].size,
+        infos->params[1].value,
+        infos->params[1].size,
+        infos->params[2].value,
+        infos->params[2].size,
+        infos->params[3].value,
+        infos->params[3].size);
+    return infos;
 }
