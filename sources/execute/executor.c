@@ -13,6 +13,7 @@
 #include "corewar.h"
 #include "my.h"
 #include "my_printf.h"
+#include "op.h"
 
 static
 int execute_live(arena_t *arena, program_t *program)
@@ -43,7 +44,7 @@ int execute_ld(arena_t *arena, program_t *program)
         return 1;
     val = read_uint32(arena, tmp + params->params[0].value % IDX_MOD);
     val = htobe32(val);
-    if (params->params[0].size == T_DIR)
+    if (params->params[0].size == T_IND)
         val = params->params[0].value;
     program->registers[params->params[1].value - 1] = val;
     program->carry_bit = 1;
