@@ -55,6 +55,9 @@ static int run_cycle(arena_t *arena)
 {
     for (int i = 0; i < arena->programs_count; i++) {
         arena->programs[i].cycles_before_die--;
+	arena->programs[i].cycles_before_next_instruction--;
+        if (arena->programs[i].cycles_before_die <= 0)
+            arena->programs[i].is_dead = true;
         if (arena->programs[i].cycles_before_next_instruction > 0 ||
             arena->programs[i].is_dead)
             continue;
@@ -63,8 +66,6 @@ static int run_cycle(arena_t *arena)
             arena->exit_code = EXIT_FAILURE_TECH;
             return 1;
         }
-        if (arena->programs[i].cycles_before_die <= 0)
-            arena->programs[i].is_dead = true;
     }
     if (arena->current_cycle == arena->cycle_to_dump)
         return dump_cycle(arena);
