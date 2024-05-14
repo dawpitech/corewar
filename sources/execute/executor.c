@@ -6,6 +6,7 @@
 */
 
 #include <endian.h>
+#include <stdint.h>
 #include <stdlib.h>
 #include <unistd.h>
 
@@ -100,11 +101,25 @@ int execute_aff(arena_t *arena, program_t *program)
 
     if (infos == NULL)
         return 1;
-    if (infos->params[0].size != REG_SIZE ||
+    if (infos->params[0].size != T_REG ||
         infos->params[0].value > REG_NUMBER)
         return 1;
     chr = (char) (program->registers[infos->params[0].value - 1] % 256);
     write(STDOUT_FILENO, &chr, 1);
+    return 0;
+}
+
+static
+int execute_zjmp(arena_t *arena, program_t *program)
+{
+    int16_t addr = 0;
+
+    addr = read_int16(arena, program->program_counter + 1);
+    addr = htobe16(addr);
+    if (program->carry_bit == 0)
+        return 0;
+    program->program_counter += addr;
+    program->carry_bit = 0;
     return 0;
 }
 
@@ -127,6 +142,8 @@ int execute_inst(int i, arena_t *arena, program_t *program)
         return execute_ld(arena, program);
     if (my_strcmp(op_tab[i].mnemonique, "st") == 0)
         return execute_st(arena, program);
+    if (my_strcmp(op_tab[i].mnemonique, "zjmp") == 0)
+        return execute_zjmp(arena, program);
     if (my_strcmp(op_tab[i].mnemonique, "sti") == 0)
         return execute_sti(arena, program);
     if (my_strcmp(op_tab[i].mnemonique, "aff") == 0)
