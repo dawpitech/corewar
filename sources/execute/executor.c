@@ -33,6 +33,26 @@ int execute_live(arena_t *arena, program_t *program)
 }
 
 static
+int execute_lld(arena_t *arena, program_t *program)
+{
+    uint32_t tmp = program->program_counter;
+    uint32_t val = 0;
+    instruct_infos_t *params = decode_instruction(arena,
+        &program->program_counter);
+
+    if (params == NULL)
+        return 1;
+    val = read_uint32(arena, tmp + params->params[0].value);
+    val = htobe32(val);
+    if (params->params[0].size == T_IND)
+        val = params->params[0].value;
+    program->registers[params->params[1].value - 1] = val;
+    program->carry_bit = 1;
+    free(params);
+    return 0;
+}
+
+static
 int execute_ld(arena_t *arena, program_t *program)
 {
     uint32_t tmp = program->program_counter;
@@ -188,6 +208,74 @@ int execute_sub(arena_t *arena, program_t *program)
     return 0;
 }
 
+static int execute_lldi(arena_t *arena, program_t *program)
+{
+    uint32_t tmp = program->program_counter;
+    instruct_infos_t *infos = decode_instruction(arena,
+        &program->program_counter);
+    int32_t a;
+    int32_t b;
+    int32_t s;
+
+    if (infos == NULL || infos->params[2].size != T_REG)
+        return 1;
+    a = infos->params[0].value;
+    if (infos->params[0].size == T_REG)
+        a = program->registers[a];
+    b = infos->params[1].value;
+    if (infos->params[1].size == T_REG)
+        b = program->registers[b];
+    if (IND_SIZE == 1)
+        s = read_uint8(arena, tmp + 3) + 4;
+    if (IND_SIZE == 2)
+        s = read_uint16(arena, tmp + 3) + 4;
+    if (IND_SIZE == 4)
+        s = read_uint32(arena, tmp + 3) + 4;
+    if (REG_SIZE == 1)
+        s = read_uint8(arena, tmp + s);
+    if (REG_SIZE == 2)
+        s = read_uint16(arena, tmp + s);
+    if (REG_SIZE == 4)
+        s = read_uint32(arena, tmp + s);
+    program->registers[infos->params[2].value] = s;
+    program->carry_bit = 1;
+    return 0;
+}
+
+static int execute_ldi(arena_t *arena, program_t *program)
+{
+    uint32_t tmp = program->program_counter;
+    instruct_infos_t *infos = decode_instruction(arena,
+        &program->program_counter);
+    int32_t a;
+    int32_t b;
+    int32_t s;
+
+    if (infos == NULL || infos->params[2].size != T_REG)
+        return 1;
+    a = infos->params[0].value;
+    if (infos->params[0].size == T_REG)
+        a = program->registers[a];
+    b = infos->params[1].value;
+    if (infos->params[1].size == T_REG)
+        b = program->registers[b];
+    if (IND_SIZE == 1)
+        s = read_uint8(arena, tmp + 3 % IDX_MOD) + 4;
+    if (IND_SIZE == 2)
+        s = read_uint16(arena, tmp + 3 % IDX_MOD) + 4;
+    if (IND_SIZE == 4)
+        s = read_uint32(arena, tmp + 3 % IDX_MOD) + 4;
+    if (REG_SIZE == 1)
+        s = read_uint8(arena, tmp + s % IDX_MOD);
+    if (REG_SIZE == 2)
+        s = read_uint16(arena, tmp + s % IDX_MOD);
+    if (REG_SIZE == 4)
+        s = read_uint32(arena, tmp + s % IDX_MOD);
+    program->registers[infos->params[2].value] = s;
+    program->carry_bit = 1;
+    return 0;
+}
+
 static
 int execute_add(arena_t *arena, program_t *program)
 {
@@ -271,6 +359,10 @@ int execute_inst(int i, arena_t *arena, program_t *program)
         return execute_live(arena, program);
     if (my_strcmp(op_tab[i].mnemonique, "ld") == 0)
         return execute_ld(arena, program);
+    if (my_strcmp(op_tab[i].mnemonique, "ldi") == 0)
+        return execute_ldi(arena, program);
+    if (my_strcmp(op_tab[i].mnemonique, "lldi") == 0)
+        return execute_lldi(arena, program);
     if (my_strcmp(op_tab[i].mnemonique, "st") == 0)
         return execute_st(arena, program);
     if (my_strcmp(op_tab[i].mnemonique, "zjmp") == 0)
@@ -293,6 +385,8 @@ int execute_inst(int i, arena_t *arena, program_t *program)
         return execute_fork(arena, program);
     if (my_strcmp(op_tab[i].mnemonique, "lfork") == 0)
         return execute_lfork(arena, program);
+    if (my_strcmp(op_tab[i].mnemonique, "lld") == 0)
+        return execute_lld(arena, program);
     return EXIT_FAILURE_TECH;
 }
 
