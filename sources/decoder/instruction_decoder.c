@@ -17,7 +17,6 @@ int read_value(arena_t *arena, uint32_t address, size_t size)
         case 1:
             return (int) read_uint8(arena, address);
         case 2:
-            return (int) htobe16(read_uint16(arena, address));
         case 4:
             return (int) htobe32(read_uint32(arena, address));
         default:
