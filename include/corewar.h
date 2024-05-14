@@ -21,7 +21,7 @@ typedef struct {
     int32_t registers[REG_NUMBER];
     long cycles_before_next_instruction;
     long cycles_before_die;
-    uint8_t carry_bit;
+    bool carry_bit;
     bool is_dead;
     FILE *fp;
     long size;

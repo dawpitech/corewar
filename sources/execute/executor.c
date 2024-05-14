@@ -126,6 +126,8 @@ int execute_and(arena_t *arena, program_t *program)
     if (infos->params[1].size == T_REG && infos->params[1].value <= REG_NUMBER)
         b = program->registers[infos->params[1].value - 1];
     and_result = a & b;
+    if (and_result == 0)
+        program->carry_bit = 1;
     program->registers[infos->params[2].value - 1] = and_result;
     free(infos);
     return 0;
