@@ -55,7 +55,7 @@ static int run_cycle(arena_t *arena)
 {
     for (int i = 0; i < arena->programs_count; i++) {
         arena->programs[i].cycles_before_die--;
-	arena->programs[i].cycles_before_next_instruction--;
+        arena->programs[i].cycles_before_next_instruction--;
         if (arena->programs[i].cycles_before_die <= 0)
             arena->programs[i].is_dead = true;
         if (arena->programs[i].cycles_before_next_instruction > 0 ||

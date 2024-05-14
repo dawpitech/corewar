@@ -17,10 +17,11 @@
 static
 int execute_live(arena_t *arena, program_t *program)
 {
-    uint8_t prog_id;
+    uint32_t prog_id;
 
     program->program_counter += 1;
     prog_id = read_uint32(arena, program->program_counter);
+    prog_id = htobe32(prog_id);
     if (prog_id > MAX_ARGS_NUMBER)
         return EXIT_FAILURE_TECH;
     program->program_counter += 4;
