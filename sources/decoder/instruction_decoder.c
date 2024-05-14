@@ -5,6 +5,7 @@
 ** corewar header
 */
 
+#include <endian.h>
 #include <malloc.h>
 #include <sys/types.h>
 
@@ -47,18 +48,14 @@ void read_params(arena_t *arena, uint32_t *address,
 static
 bool is_index_instruction(instruct_infos_t *infos)
 {
-    return (infos->instruction == 0x0A || infos->instruction == 0x0B || infos->instruction == 0x0E);
+    return (infos->instruction == 0x0A || infos->instruction == 0x0B ||
+        infos->instruction == 0x0E);
 }
 
-instruct_infos_t *decode_instruction(arena_t *arena, uint32_t *address)
+static void print_debug(instruct_infos_t *infos)
 {
-    instruct_infos_t *infos = malloc(sizeof(instruct_infos_t));
-
-    infos->instruction = read_uint8(arena, *address);
-    *address += 1;
-    infos->coding_byte = read_uint8(arena, *address);
-    read_params(arena, address, infos, is_index_instruction(infos));
-    printf("Read instruction 0x%X, CB: %X, %d (%zu bytes), %d (%zu bytes), %d (%zu bytes), %d (%zu bytes)\n",
+    printf("Read instruction 0x%X, CB: %X, %d (%zu bytes), \
+        %d (%zu bytes), %d (%zu bytes), %d (%zu bytes)\n",
         infos->instruction,
         infos->coding_byte,
         infos->params[0].value,
@@ -69,5 +66,15 @@ instruct_infos_t *decode_instruction(arena_t *arena, uint32_t *address)
         infos->params[2].size,
         infos->params[3].value,
         infos->params[3].size);
+}
+
+instruct_infos_t *decode_instruction(arena_t *arena, uint32_t *address)
+{
+    instruct_infos_t *infos = malloc(sizeof(instruct_infos_t));
+
+    infos->instruction = read_uint8(arena, *address);
+    *address += 1;
+    infos->coding_byte = read_uint8(arena, *address);
+    read_params(arena, address, infos, is_index_instruction(infos));
     return infos;
 }

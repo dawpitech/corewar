@@ -22,6 +22,6 @@ void write_bytes(long num, int byte_nb, uint32_t address, arena_t *arena)
         return;
     for (int i = 0; i < byte_nb; i++) {
         extracted_byte = (num >> (8 * i)) & 0xFF;
-        arena->ram[address + i] = extracted_byte;
+        arena->ram[(address + i) % MEM_SIZE] = extracted_byte;
     }
 }

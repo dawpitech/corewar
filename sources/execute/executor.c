@@ -12,6 +12,7 @@
 #include "corewar.h"
 #include "my.h"
 #include "my_printf.h"
+#include "op.h"
 
 static
 int execute_live(arena_t *arena, program_t *program)
@@ -33,6 +34,20 @@ int execute_live(arena_t *arena, program_t *program)
 static
 int execute_ld(arena_t *arena, program_t *program)
 {
+    uint32_t tmp = program->program_counter;
+    uint32_t val = 0;
+    instruct_infos_t *params = decode_instruction(arena,
+        &program->program_counter);
+
+    if (params == NULL)
+        return 1;
+    val = read_uint32(arena, tmp + params->params[0].value % IDX_MOD);
+    val = htobe32(val);
+    if (params->params[0].size == T_DIR)
+        val = params->params[0].value;
+    program->registers[params->params[1].value - 1] = val;
+    program->carry_bit = 1;
+    free(params);
     return 0;
 }
 
@@ -40,12 +55,14 @@ static
 int execute_sti(arena_t *arena, program_t *program)
 {
     uint32_t tmp = program->program_counter;
-    instruct_infos_t *infos = decode_instruction(arena, &program->program_counter);
+    instruct_infos_t *infos = decode_instruction(arena,
+        &program->program_counter);
 
     if (infos == NULL)
         return 1;
     write_bytes(program->registers[infos->params[0].value - 1], 4,
-                tmp + (infos->params[1].value + infos->params[2].value) % IDX_MOD, arena);
+                tmp + (infos->params[1].value +
+                infos->params[2].value) % IDX_MOD, arena);
     free(infos);
     return 0;
 }
@@ -53,15 +70,17 @@ int execute_sti(arena_t *arena, program_t *program)
 static
 int execute_aff(arena_t *arena, program_t *program)
 {
-    instruct_infos_t *infos = decode_instruction(arena, &program->program_counter);
+    instruct_infos_t *infos = decode_instruction(arena,
+        &program->program_counter);
     char chr;
 
     if (infos == NULL)
         return 1;
-    if (infos->params[0].size != REG_SIZE || infos->params[0].value > REG_NUMBER)
+    if (infos->params[0].size != REG_SIZE ||
+        infos->params[0].value > REG_NUMBER)
         return 1;
     chr = (char) (program->registers[infos->params[0].value - 1] % 256);
-    write(STDOUT_FILENO, &chr,1);
+    write(STDOUT_FILENO, &chr, 1);
     return 0;
 }
 
@@ -91,7 +110,7 @@ int execute_inst(int i, arena_t *arena, program_t *program)
 
 int execute_next_inst(arena_t *arena, program_t *program)
 {
-    uint8_t ins = arena->ram[program->program_counter];
+    uint8_t ins = arena->ram[program->program_counter % MEM_SIZE];
     int i = find_opcode(ins);
 
     if (i == -1)
