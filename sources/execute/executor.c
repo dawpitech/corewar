@@ -110,6 +110,102 @@ int execute_aff(arena_t *arena, program_t *program)
 }
 
 static
+int execute_xor(arena_t *arena, program_t *program)
+{
+    instruct_infos_t *infos = decode_instruction(arena, &program->program_counter);
+    int32_t a;
+    int32_t b;
+    int32_t and_result;
+
+    if (infos == NULL || infos->params[2].size != T_REG || infos->params[2].value > REG_NUMBER)
+        return 1;
+    a = infos->params[0].value;
+    b = infos->params[1].value;
+    if (infos->params[0].size == T_REG && infos->params[0].value <= REG_NUMBER)
+        a = program->registers[infos->params[0].value - 1];
+    if (infos->params[1].size == T_REG && infos->params[1].value <= REG_NUMBER)
+        b = program->registers[infos->params[1].value - 1];
+    and_result = a ^ b;
+    if (and_result == 0)
+        program->carry_bit = 1;
+    program->registers[infos->params[2].value - 1] = and_result;
+    free(infos);
+    return 0;
+}
+
+static
+int execute_or(arena_t *arena, program_t *program)
+{
+    instruct_infos_t *infos = decode_instruction(arena, &program->program_counter);
+    int32_t a;
+    int32_t b;
+    int32_t and_result;
+
+    if (infos == NULL || infos->params[2].size != T_REG || infos->params[2].value > REG_NUMBER)
+        return 1;
+    a = infos->params[0].value;
+    b = infos->params[1].value;
+    if (infos->params[0].size == T_REG && infos->params[0].value <= REG_NUMBER)
+        a = program->registers[infos->params[0].value - 1];
+    if (infos->params[1].size == T_REG && infos->params[1].value <= REG_NUMBER)
+        b = program->registers[infos->params[1].value - 1];
+    and_result = a | b;
+    if (and_result == 0)
+        program->carry_bit = 1;
+    program->registers[infos->params[2].value - 1] = and_result;
+    free(infos);
+    return 0;
+}
+
+static
+int execute_sub(arena_t *arena, program_t *program)
+{
+    instruct_infos_t *infos = decode_instruction(arena, &program->program_counter);
+    int32_t a;
+    int32_t b;
+    int32_t and_result;
+
+    if (infos == NULL || infos->params[2].size != T_REG || infos->params[2].value > REG_NUMBER)
+        return 1;
+    a = infos->params[0].value;
+    b = infos->params[1].value;
+    if (infos->params[0].size == T_REG && infos->params[0].value <= REG_NUMBER)
+        a = program->registers[infos->params[0].value - 1];
+    if (infos->params[1].size == T_REG && infos->params[1].value <= REG_NUMBER)
+        b = program->registers[infos->params[1].value - 1];
+    and_result = a - b;
+    if (and_result == 0)
+        program->carry_bit = 1;
+    program->registers[infos->params[2].value - 1] = and_result;
+    free(infos);
+    return 0;
+}
+
+static
+int execute_add(arena_t *arena, program_t *program)
+{
+    instruct_infos_t *infos = decode_instruction(arena, &program->program_counter);
+    int32_t a;
+    int32_t b;
+    int32_t and_result;
+
+    if (infos == NULL || infos->params[2].size != T_REG || infos->params[2].value > REG_NUMBER)
+        return 1;
+    a = infos->params[0].value;
+    b = infos->params[1].value;
+    if (infos->params[0].size == T_REG && infos->params[0].value <= REG_NUMBER)
+        a = program->registers[infos->params[0].value - 1];
+    if (infos->params[1].size == T_REG && infos->params[1].value <= REG_NUMBER)
+        b = program->registers[infos->params[1].value - 1];
+    and_result = a + b;
+    if (and_result == 0)
+        program->carry_bit = 1;
+    program->registers[infos->params[2].value - 1] = and_result;
+    free(infos);
+    return 0;
+}
+
+static
 int execute_and(arena_t *arena, program_t *program)
 {
     instruct_infos_t *infos = decode_instruction(arena, &program->program_counter);
@@ -174,6 +270,14 @@ int execute_inst(int i, arena_t *arena, program_t *program)
         return execute_aff(arena, program);
     if (my_strcmp(op_tab[i].mnemonique, "and") == 0)
         return execute_and(arena, program);
+    if (my_strcmp(op_tab[i].mnemonique, "add") == 0)
+        return execute_add(arena, program);
+    if (my_strcmp(op_tab[i].mnemonique, "sub") == 0)
+        return execute_sub(arena, program);
+    if (my_strcmp(op_tab[i].mnemonique, "or") == 0)
+        return execute_or(arena, program);
+    if (my_strcmp(op_tab[i].mnemonique, "xor") == 0)
+        return execute_xor(arena, program);
     return EXIT_FAILURE_TECH;
 }
 
