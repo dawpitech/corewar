@@ -31,7 +31,7 @@ typedef struct {
     long cycle_to_dump;
     long current_cycle;
     uint8_t ram[MEM_SIZE];
-    uint8_t programs_count;
+    uint32_t programs_count;
     int exit_code;
     program_t *programs;
 } arena_t;

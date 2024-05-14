@@ -36,7 +36,7 @@ static int find_winner(arena_t *arena)
         if (arena->programs[i].cycles_before_die > bestest &&
             !arena->programs[i].is_dead) {
             bestest = arena->programs[i].cycles_before_die;
-            id = i;
+            id = arena->programs[i].id;
         }
     }
     return id;
