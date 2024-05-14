@@ -23,6 +23,7 @@ typedef struct {
     long cycles_before_die;
     bool carry_bit;
     bool is_dead;
+    int id;
     FILE *fp;
     long size;
 } program_t;

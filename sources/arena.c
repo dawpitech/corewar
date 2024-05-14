@@ -114,9 +114,8 @@ int create_arena_memory(arena_t *arena)
 void free_arena(arena_t *arena)
 {
     for (int i = 0; i < arena->programs_count; i++) {
-        if (arena->programs[i].name == NULL)
-            continue;
-        free(arena->programs[i].name);
+        if (arena->programs[i].name != NULL)
+            free(arena->programs[i].name);
         if (arena->programs[i].fp != NULL)
             fclose(arena->programs[i].fp);
     }
@@ -131,7 +130,9 @@ int create_arena(arena_t *arena)
     arena->programs = malloc(sizeof(program_t) * MAX_ARGS_NUMBER);
     if (arena->programs == NULL)
         return 1;
-    for (int i = 0; i < MAX_ARGS_NUMBER; i++)
+    for (int i = 0; i < MAX_ARGS_NUMBER; i++) {
         my_memset(&arena->programs[i], 0, sizeof(program_t));
+        arena->programs[i].id = i;
+    }
     return 0;
 }
