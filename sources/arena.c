@@ -110,9 +110,10 @@ int create_arena_memory(arena_t *arena)
 
 void free_arena(arena_t *arena)
 {
-    for (int i = 0; i < MAX_ARGS_NUMBER; i++) {
+    for (int i = 0; i < arena->programs_count; i++) {
         if (arena->programs[i].name == NULL)
             continue;
         free(arena->programs[i].name);
     }
+    free(arena->programs);
 }

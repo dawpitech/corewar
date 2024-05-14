@@ -32,7 +32,7 @@ typedef struct {
     uint8_t ram[MEM_SIZE];
     uint8_t programs_count;
     int exit_code;
-    program_t programs[MAX_ARGS_NUMBER];
+    program_t *programs;
 } arena_t;
 typedef struct {
     int value;
@@ -45,6 +45,8 @@ typedef struct {
 } instruct_infos_t;
 int corewar(int argc, char const **argv);
 int execute_next_inst(arena_t *arena, program_t *program);
+int execute_fork(arena_t *arena, program_t *program);
+int execute_lfork(arena_t *arena, program_t *program);
 void write_bytes(long num, int byte_nb, uint32_t address, arena_t *arena);
 uint8_t *decode_cb(arena_t *arena, uint32_t address);
 int16_t read_int16(arena_t *arena, uint32_t address);

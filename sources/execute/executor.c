@@ -278,6 +278,10 @@ int execute_inst(int i, arena_t *arena, program_t *program)
         return execute_or(arena, program);
     if (my_strcmp(op_tab[i].mnemonique, "xor") == 0)
         return execute_xor(arena, program);
+    if (my_strcmp(op_tab[i].mnemonique, "fork") == 0)
+        return execute_fork(arena, program);
+    if (my_strcmp(op_tab[i].mnemonique, "lfork") == 0)
+        return execute_lfork(arena, program);
     return EXIT_FAILURE_TECH;
 }
 
