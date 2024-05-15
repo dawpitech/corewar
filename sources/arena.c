@@ -5,11 +5,14 @@
 ** title
 */
 
+#include <ncurses.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <stddef.h>
 #include "op.h"
 #include "corewar.h"
+#include "visuals.h"
 #include "arena.h"
 #include "my.h"
 #include <endian.h>
@@ -50,6 +53,16 @@ static int init_copy(char **buff, int i, arena_t *arena)
     return 0;
 }
 
+static void copy_owning(arena_t *arena, program_t *program)
+{
+    for (uint32_t addr = program->program_counter;
+        addr < (program->program_counter + program->real_size)
+	&& addr < MEM_SIZE;
+	addr++) {
+        arena->ram_owning[addr] = program->id;
+    }
+}
+
 static int copy_champs(arena_t *arena)
 {
     char *buff = NULL;
@@ -68,6 +81,7 @@ static int copy_champs(arena_t *arena)
             return 1;
         if (copy_champs_internal(arena, i, buff, &last_addr))
             last_addr += distance;
+        copy_owning(arena, &arena->programs[i]);
     }
     return 0;
 }
@@ -83,6 +97,7 @@ static int check_champion(header_t *header, struct stat *s, FILE *f,
         return 1;
     if ((s->st_size - sizeof(header_t)) >= MEM_SIZE)
         return 1;
+    program->real_size = s->st_size - sizeof(header_t);
     free(program->name);
     return 0;
 }
@@ -113,13 +128,15 @@ int create_arena_memory(arena_t *arena)
 
 void free_arena(arena_t *arena)
 {
-    for (int i = 0; i < arena->programs_count; i++) {
+    for (u_int32_t i = 0; i < arena->programs_count; i++) {
         if (arena->programs[i].name != NULL)
             free(arena->programs[i].name);
         if (arena->programs[i].fp != NULL)
             fclose(arena->programs[i].fp);
     }
     free(arena->programs);
+    if (VISUAL_MODE == 1)
+        endwin();
 }
 
 int create_arena(arena_t *arena)
@@ -128,6 +145,7 @@ int create_arena(arena_t *arena)
     arena->cycle_to_dump = -1;
     arena->exit_code = EXIT_SUCCESS_TECH;
     arena->programs = malloc(sizeof(program_t) * MAX_ARGS_NUMBER);
+    my_memset(arena->ram_owning, -1, MEM_SIZE * sizeof(int));
     if (arena->programs == NULL)
         return 1;
     for (int i = 0; i < MAX_ARGS_NUMBER; i++) {

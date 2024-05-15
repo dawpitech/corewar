@@ -12,7 +12,7 @@
 #include "my_printf.h"
 #include "op.h"
 #include <stdint.h>
-#include <stdlib.h>
+#include "visuals.h"
 
 static int dump_cycle(arena_t *arena)
 {
@@ -33,7 +33,7 @@ static int find_winner(arena_t *arena)
     int bestest = 0;
     int id = 0;
 
-    for (int i = 0; i < arena->programs_count; i++) {
+    for (uint32_t i = 0; i < arena->programs_count; i++) {
         if (arena->programs[i].cycles_before_die > bestest &&
             !arena->programs[i].is_dead) {
             bestest = arena->programs[i].cycles_before_die;
@@ -47,14 +47,14 @@ static int check_end(arena_t *arena)
 {
     int alive = 0;
 
-    for (int i = 0; i < arena->programs_count; i++)
+    for (uint32_t i = 0; i < arena->programs_count; i++)
         alive += arena->programs[i].is_dead == false;
     return alive <= 1;
 }
 
 static int run_cycle(arena_t *arena)
 {
-    for (int i = 0; i < arena->programs_count; i++) {
+    for (uint32_t i = 0; i < arena->programs_count && show_mem(arena); i++) {
         arena->programs[i].cycles_before_die--;
         arena->programs[i].cycles_before_next_instruction--;
         if (arena->programs[i].cycles_before_die <= 0)
@@ -83,6 +83,8 @@ int corewar(int argc, char const **argv)
 
     if (argc == 2 && my_strcmp(argv[1], "-h") == 0)
         return print_help();
+    if (VISUAL_MODE == 1)
+	init_ncurses();
     if (create_arena(&arena) || parse_arguments(argc, argv, &arena))
         return EXIT_FAILURE_TECH;
     if (create_arena_memory(&arena))

@@ -26,11 +26,13 @@ typedef struct {
     int id;
     FILE *fp;
     long size;
+    long real_size;
 } program_t;
 typedef struct {
     long cycle_to_dump;
     long current_cycle;
     uint8_t ram[MEM_SIZE];
+    int ram_owning[MEM_SIZE];
     uint32_t programs_count;
     int exit_code;
     program_t *programs;

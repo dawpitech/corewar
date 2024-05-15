@@ -25,7 +25,7 @@ T_CFLAGS	+=	-g3
 T_CFLAGS	+=	-lcriterion
 T_CFLAGS	+=	--coverage
 
-LIBS_FLAGS	=	-L./lib/ -lmy
+LIBS_FLAGS	=	-L./lib/ -lmy -lncurses
 
 BDIR	=	.build
 T_BDIR	=	.buildTests
@@ -37,6 +37,7 @@ SRC	=	./sources/corewar.c
 SRC	+=	./sources/op.c
 SRC	+=	./sources/arguments.c
 SRC	+=	./sources/arena.c
+SRC	+=	./sources/visuals.c
 SRC	+=	./sources/utils/reader.c
 SRC	+=	./sources/utils/writer.c
 SRC	+=	./sources/utils/memory.c
