@@ -9,6 +9,7 @@
 #include <unistd.h>
 
 #include "corewar.h"
+#include "visuals.h"
 
 int execute_aff(arena_t *arena, program_t *program)
 {
@@ -22,7 +23,8 @@ int execute_aff(arena_t *arena, program_t *program)
         infos->params[0].value > REG_NUMBER)
         return 1;
     chr = (char) (program->registers[infos->params[0].value - 1] % 256);
-    write(STDOUT_FILENO, &chr, 1);
+    if (VISUAL_MODE == 0)
+	write(STDOUT_FILENO, &chr, 1);
     free(infos);
     return 0;
 }
