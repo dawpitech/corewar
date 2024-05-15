@@ -7,7 +7,7 @@
 
 #pragma once
 #include "corewar.h"
-#define INSTRUCTION_HANDLERS_SIZE (5)
+#define INSTRUCTION_HANDLERS_SIZE (16)
 
 typedef struct {
     int instruction_code;

@@ -9,5 +9,6 @@
       gcovr
       hexyl
       imhex
+      ncurses
     ];
 }

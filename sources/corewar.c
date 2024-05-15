@@ -16,7 +16,6 @@
 
 static int dump_cycle(arena_t *arena)
 {
-    return 1;
     for (uint32_t i = 0; i < MEM_SIZE; i++) {
         if (i != 0 && i % 32 == 0)
             my_putchar('\n');
@@ -63,7 +62,7 @@ static int run_cycle(arena_t *arena)
             arena->programs[i].is_dead)
             continue;
         if (execute_next_inst(arena, &arena->programs[i]) ==
-            69) {
+            EXIT_FAILURE_TECH) {
             arena->exit_code = EXIT_FAILURE_TECH;
             return 1;
         }
@@ -84,7 +83,7 @@ int corewar(int argc, char const **argv)
     if (argc == 2 && my_strcmp(argv[1], "-h") == 0)
         return print_help();
     if (VISUAL_MODE == 1)
-	init_ncurses();
+	    init_ncurses();
     if (create_arena(&arena) || parse_arguments(argc, argv, &arena))
         return EXIT_FAILURE_TECH;
     if (create_arena_memory(&arena))

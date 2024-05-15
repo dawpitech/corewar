@@ -11,12 +11,13 @@
 static
 int execute_inst(int inst_code, arena_t *arena, program_t *program)
 {
-    if (inst_code < 0 || inst_code >= INSTRUCTION_HANDLERS_SIZE)
+    if (inst_code <= 0 || inst_code > INSTRUCTION_HANDLERS_SIZE)
         return EXIT_FAILURE_TECH;
-    program->cycles_before_next_instruction = op_tab[inst_code].nbr_cycles;
+    program->cycles_before_next_instruction = op_tab[inst_code - 1].nbr_cycles;
     for (int j = 0; j < INSTRUCTION_HANDLERS_SIZE; j++)
         if (inst_code == instruction_handlers[j].instruction_code) {
             printf("Executing %d\n", instruction_handlers[j].instruction_code);
+
             return instruction_handlers[j].handler(arena, program);
         }
     return EXIT_FAILURE_TECH;
