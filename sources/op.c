@@ -4,6 +4,7 @@
 ** File description:
 ** op.c for korewar
 */
+
 #include "op.h"
 
 op_t op_tab[] = {

@@ -16,6 +16,7 @@
 
 static int dump_cycle(arena_t *arena)
 {
+    return 1;
     for (uint32_t i = 0; i < MEM_SIZE; i++) {
         if (i != 0 && i % 32 == 0)
             my_putchar('\n');
@@ -62,7 +63,7 @@ static int run_cycle(arena_t *arena)
             arena->programs[i].is_dead)
             continue;
         if (execute_next_inst(arena, &arena->programs[i]) ==
-            EXIT_FAILURE_TECH) {
+            69) {
             arena->exit_code = EXIT_FAILURE_TECH;
             return 1;
         }
