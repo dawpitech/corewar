@@ -46,26 +46,9 @@ void read_params(arena_t *arena, uint32_t *address,
 }
 
 static
-bool is_index_instruction(instruct_infos_t *infos)
-{
+bool is_index_instruction(instruct_infos_t *infos) {
     return (infos->instruction == 0x0A || infos->instruction == 0x0B ||
-        infos->instruction == 0x0E);
-}
-
-static void print_debug(instruct_infos_t *infos)
-{
-    printf("Read instruction 0x%X, CB: %X, %d (%zu bytes), \
-        %d (%zu bytes), %d (%zu bytes), %d (%zu bytes)\n",
-        infos->instruction,
-        infos->coding_byte,
-        infos->params[0].value,
-        infos->params[0].size,
-        infos->params[1].value,
-        infos->params[1].size,
-        infos->params[2].value,
-        infos->params[2].size,
-        infos->params[3].value,
-        infos->params[3].size);
+            infos->instruction == 0x0E);
 }
 
 instruct_infos_t *decode_instruction(arena_t *arena, uint32_t *address)

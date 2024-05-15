@@ -5,14 +5,13 @@
 ** writer header
 */
 
-#include "corewar.h"
-#include "op.h"
 #include <endian.h>
-#include <stdint.h>
+
+#include "corewar.h"
 
 void write_bytes(long num, int byte_nb, uint32_t address, arena_t *arena)
 {
-    char extracted_byte = 0;
+    char extracted_byte;
 
     if (byte_nb == 2)
         num = htobe16(num);
@@ -21,7 +20,7 @@ void write_bytes(long num, int byte_nb, uint32_t address, arena_t *arena)
     if (byte_nb < 1)
         return;
     for (int i = 0; i < byte_nb; i++) {
-        extracted_byte = (num >> (8 * i)) & 0xFF;
+        extracted_byte = (char) ((num >> (8 * i)) & 0xFF);
         arena->ram[(address + i) % MEM_SIZE] = extracted_byte;
     }
 }

@@ -6,8 +6,6 @@
 */
 
 #include "corewar.h"
-#include "op.h"
-#include <stdint.h>
 
 /**
  * Read a 32 bits value from the arena
@@ -36,6 +34,6 @@ uint16_t read_uint16(arena_t *arena, uint32_t address)
 
 int16_t read_int16(arena_t *arena, uint32_t address)
 {
-    return (arena->ram[address % MEM_SIZE] |
+    return (int16_t) (arena->ram[address % MEM_SIZE] |
             (arena->ram[(address + 1) % MEM_SIZE] << 8));
 }

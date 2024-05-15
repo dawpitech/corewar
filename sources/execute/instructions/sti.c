@@ -6,18 +6,16 @@
 */
 
 #include <malloc.h>
-#include <stdint.h>
 
 #include "corewar.h"
-#include "op.h"
 
 int execute_sti(arena_t *arena, program_t *program)
 {
     uint32_t tmp = program->program_counter;
     instruct_infos_t *infos = decode_instruction(arena,
         &program->program_counter);
-    uint32_t a = 0;
-    uint32_t b = 0;
+    uint32_t a;
+    uint32_t b;
 
     if (infos == NULL)
         return 1;

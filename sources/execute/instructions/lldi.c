@@ -9,22 +9,23 @@
 
 #include "corewar.h"
 
+static
 int32_t read_int(arena_t *arena, uint32_t tmp)
 {
     int32_t s;
 
     if (IND_SIZE == 1)
-        s = read_uint8(arena, tmp + 3) + 4;
+        s = (int32_t) read_uint8(arena, tmp + 3) + 4;
     if (IND_SIZE == 2)
-        s = read_uint16(arena, tmp + 3) + 4;
+        s = (int32_t) read_uint16(arena, tmp + 3) + 4;
     if (IND_SIZE == 4)
-        s = read_uint32(arena, tmp + 3) + 4;
+        s = (int32_t) read_uint32(arena, tmp + 3) + 4;
     if (REG_SIZE == 1)
-        s = read_uint8(arena, tmp + s);
+        s = (int32_t) read_uint8(arena, tmp + s);
     if (REG_SIZE == 2)
-        s = read_uint16(arena, tmp + s);
+        s = (int32_t) read_uint16(arena, tmp + s);
     if (REG_SIZE == 4)
-        s = read_uint32(arena, tmp + s);
+        s = (int32_t) read_uint32(arena, tmp + s);
     return s;
 }
 

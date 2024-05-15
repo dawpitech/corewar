@@ -32,7 +32,7 @@ static int find_winner(arena_t *arena)
     for (uint32_t i = 0; i < arena->programs_count; i++) {
         if (arena->programs[i].cycles_before_die > bestest &&
             !arena->programs[i].is_dead) {
-            bestest = arena->programs[i].cycles_before_die;
+            bestest = (int) (arena->programs[i].cycles_before_die);
             id = arena->programs[i].id;
         }
     }

@@ -6,11 +6,10 @@
 */
 
 #include <stddef.h>
+
 #include "corewar.h"
 #include "arguments.h"
 #include "my.h"
-#include "op.h"
-#include <stdio.h>
 
 int print_help(void)
 {
@@ -27,7 +26,8 @@ int print_help(void)
     return EXIT_SUCCESS_TECH;
 }
 
-static int is_nbr_valid(const char *nbr)
+static
+int is_nbr_valid(const char *nbr)
 {
     for (int i = 0; nbr[i] != '\0'; i++)
         if (!IS_NUM(nbr[i]))
@@ -35,7 +35,8 @@ static int is_nbr_valid(const char *nbr)
     return 1;
 }
 
-static int get_nbr_or_addr(const char **argv, int *i, long *nbr, long *addr)
+static
+int get_nbr_or_addr(const char **argv, int *i, long *nbr, long *addr)
 {
     if (my_strcmp(argv[*i], "-n") == 0) {
         *nbr = my_getnbr(argv[*i + 1]);
@@ -50,7 +51,8 @@ static int get_nbr_or_addr(const char **argv, int *i, long *nbr, long *addr)
     return 0;
 }
 
-static int find_place(arena_t *arena, long *nbr)
+static
+int find_place(arena_t *arena, long *nbr)
 {
     for (int i = 0; i < MAX_ARGS_NUMBER; i++) {
         if (arena->programs[i].name == NULL) {

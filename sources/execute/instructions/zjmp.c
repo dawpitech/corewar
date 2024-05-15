@@ -11,7 +11,7 @@
 
 int execute_zjmp(arena_t *arena, program_t *program)
 {
-    int16_t addr = 0;
+    int16_t addr;
 
     addr = read_int16(arena, program->program_counter + 1);
     addr = htobe16(addr);

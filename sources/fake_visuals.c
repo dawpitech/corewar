@@ -24,5 +24,4 @@ int show_mem(arena_t *arena)
 
 void my_endwin(void)
 {
-    return;
 }

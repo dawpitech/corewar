@@ -12,7 +12,7 @@
 int execute_st(arena_t *arena, program_t *program)
 {
     uint32_t tmp = program->program_counter;
-    uint32_t val = 0;
+    uint32_t val;
     instruct_infos_t *params = decode_instruction(arena,
             &program->program_counter);
 
