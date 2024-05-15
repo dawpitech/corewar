@@ -27,7 +27,7 @@ int execute_ld(arena_t *arena, program_t *program)
     if ((params->params[1].value - 1) < 0 ||
         (params->params[1].value - 1) > REG_NUMBER)
         return 0;
-    program->registers[params->params[1].value - 1] = val;
+    program->registers[params->params[1].value - 1] = (int) val;
     program->carry_bit = 1;
     free(params);
     return 0;
