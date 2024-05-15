@@ -28,7 +28,7 @@ int execute_live(arena_t *arena, program_t *program)
     arena->live_nbr++;
     if (arena->live_nbr == NBR_LIVE) {
         arena->cycle_to_die -= CYCLE_DELTA;
-	arena->live_nbr = 0;
+        arena->live_nbr = 0;
     }
     return EXIT_SUCCESS_TECH;
 }

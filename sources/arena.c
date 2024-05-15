@@ -57,8 +57,8 @@ static void copy_owning(arena_t *arena, program_t *program)
 {
     for (uint32_t addr = program->program_counter;
         addr < (program->program_counter + program->real_size)
-	&& addr < MEM_SIZE;
-	addr++) {
+        && addr < MEM_SIZE;
+        addr++) {
         arena->ram_owning[addr] = program->id;
     }
 }

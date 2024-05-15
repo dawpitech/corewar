@@ -36,10 +36,12 @@ int execute_fork(arena_t *arena, program_t *program)
         sizeof(program_t) * (arena->programs_count - 1));
     my_memset(&arena->programs[arena->programs_count - 1], 0,
         sizeof(program_t));
-    arena->programs[id].program_counter = (arena->programs[id].program_counter + 1 + IND_SIZE) % MEM_SIZE;
+    arena->programs[id].program_counter = (arena->programs[id].program_counter
+        + 1 + IND_SIZE) % MEM_SIZE;
     update_arena_programs(arena, addr, id);
     my_memcpy(&arena->programs[arena->programs_count - 1], REG_NUMBER
         * sizeof(int32_t), arena->programs[id].registers);
-    arena->programs[arena->programs_count - 1].cycles_before_next_instruction = arena->programs[id].cycles_before_next_instruction;
+    arena->programs[arena->programs_count - 1].cycles_before_next_instruction =
+        arena->programs[id].cycles_before_next_instruction;
     return 0;
 }

@@ -12,7 +12,7 @@ static
 int execute_inst(int inst_code, arena_t *arena, program_t *program)
 {
     if (inst_code <= 0 || inst_code > INSTRUCTION_HANDLERS_SIZE) {
-	program->program_counter++;
+        program->program_counter++;
         return EXIT_FAILURE_TECH;
     }
     program->cycles_before_next_instruction = op_tab[inst_code - 1].nbr_cycles;

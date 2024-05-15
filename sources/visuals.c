@@ -60,6 +60,19 @@ static int is_prog_dead(arena_t *arena, int id)
     return 1;
 }
 
+static void print_header(program_t *program, arena_t *arena, int y, int dead)
+{
+    attron(COLOR_PAIR(4 + program->id));
+    mvprintw(2, y, "%s", program->name);
+    attroff(COLOR_PAIR(4 + program->id));
+    mvprintw(2, y + my_strlen(program->name), " - ");
+    dead = is_prog_dead(arena, program->id);
+    attron(COLOR_PAIR(2 + dead));
+    mvprintw(2, y + my_strlen(program->name) + 3, "%s",
+        dead ? "Dead" : "Alive");
+    attroff(COLOR_PAIR(2 + dead));
+}
+
 static int show_header(arena_t *arena, int cols)
 {
     int buff[arena->programs_count];
@@ -74,20 +87,29 @@ static int show_header(arena_t *arena, int cols)
     for (uint32_t i = 0; i < arena->programs_count; i++) {
         if (!in_buffer(count, arena, &arena->programs[i], buff)) {
             buff[count] = arena->programs[i].id;
-            attron(COLOR_PAIR(4 + arena->programs[i].id));
-            mvprintw(2, y, "%s", arena->programs[i].name);
-            attroff(COLOR_PAIR(4 + arena->programs[i].id));
-            mvprintw(2, y + my_strlen(arena->programs[i].name), " - ");
-            dead = is_prog_dead(arena, arena->programs[i].id);
-            attron(COLOR_PAIR(2 + dead));
-            mvprintw(2, y + my_strlen(arena->programs[i].name) + 3, "%s",
-                dead ? "Dead" : "Alive");
-            attroff(COLOR_PAIR(2 + dead));
+            print_header(&arena->programs[i], arena, y, dead);
             y += gap;
             count++;
         }
     }
     return 0;
+}
+
+static void print_mem(arena_t *arena, uint32_t i, int x, int y)
+{
+    int id = 0;
+
+    id = arena->ram_owning[i];
+    if (id != -1)
+        attron(COLOR_PAIR(4 + id));
+    mvprintw(y, x, "%02X", arena->ram[i]);
+    if (id != -1)
+        attroff(COLOR_PAIR(4 + id));
+    if (find_pc(i, arena)) {
+        attron(COLOR_PAIR(1));
+        mvprintw(y, x, "%02X", arena->ram[i]);
+        attroff(COLOR_PAIR(1));
+    }
 }
 
 int show_mem(arena_t *arena)
@@ -96,7 +118,6 @@ int show_mem(arena_t *arena)
     uint32_t y = 5;
     int rows = 0;
     int cols = 0;
-    int id = 0;
 
     getmaxyx(stdscr, rows, cols);
     clear();
@@ -106,17 +127,7 @@ int show_mem(arena_t *arena)
             y++;
             x = 0;
         }
-	id = arena->ram_owning[i];
-	if (id != -1)
-	    attron(COLOR_PAIR(4 + id));
-        mvprintw(y, x, "%02X", arena->ram[i]);
-	if (id != -1)
-	    attroff(COLOR_PAIR(4 + id));
-        if (find_pc(i, arena)) {
-            attron(COLOR_PAIR(1));
-            mvprintw(y, x, "%02X", arena->ram[i]);
-            attroff(COLOR_PAIR(1));
-        }
+        print_mem(arena, i, x, y);
         x += 2;
     }
     refresh();
