@@ -5,19 +5,16 @@
 ** title
 */
 
-#include <ncurses.h>
-#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <stddef.h>
+#include <endian.h>
+#include <sys/stat.h>
+
 #include "op.h"
 #include "corewar.h"
-#include "visuals.h"
 #include "arena.h"
 #include "my.h"
-#include <endian.h>
-#include <sys/types.h>
-#include <sys/stat.h>
 
 static int copy_champs_internal(arena_t *arena, int i, char *buff,
     long *last_addr)
@@ -135,8 +132,8 @@ void free_arena(arena_t *arena)
             fclose(arena->programs[i].fp);
     }
     free(arena->programs);
-    if (VISUAL_MODE == 1)
-        endwin();
+    if (is_visual())
+        my_endwin();
 }
 
 int create_arena(arena_t *arena)

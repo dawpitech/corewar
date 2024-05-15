@@ -77,4 +77,10 @@ uint32_t read_uint32(arena_t *arena, uint32_t address);
 instruct_infos_t *decode_instruction(arena_t *arena, uint32_t *address);
 int execute_next_inst(arena_t *arena, program_t *program);
 void *my_realloc(void *ptr, size_t new_size, size_t old_size);
+
+//GRAPHICAL
+int init_ncurses(void);
+int show_mem(arena_t *arena);
+void my_endwin(void);
+bool is_visual(void);
 #endif //COREWAR_COREWAR_H

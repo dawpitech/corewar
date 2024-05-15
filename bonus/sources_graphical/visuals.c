@@ -5,12 +5,16 @@
 ** title
 */
 
+#include <ncurses.h>
+#include <unistd.h>
+
 #include "corewar.h"
 #include "my.h"
-#include "visuals.h"
-#include <ncurses.h>
-#include <stdint.h>
-#include <unistd.h>
+
+bool is_visual(void)
+{
+    return true;
+}
 
 int init_ncurses(void)
 {
@@ -29,7 +33,8 @@ int init_ncurses(void)
     return 0;
 }
 
-static int find_pc(uint32_t x, arena_t *arena)
+static
+int find_pc(uint32_t x, arena_t *arena)
 {
     for (uint32_t i = 0; i < arena->programs_count; i++) {
         if (x == arena->programs[i].program_counter &&
@@ -40,7 +45,8 @@ static int find_pc(uint32_t x, arena_t *arena)
     return 0;
 }
 
-static int in_buffer(uint32_t count, arena_t *arena, program_t *program,
+static
+int in_buffer(uint32_t count, arena_t *arena, program_t *program,
     int buff[arena->programs_count])
 {
     for (uint32_t j = 0; j < count; j++) {
@@ -50,7 +56,8 @@ static int in_buffer(uint32_t count, arena_t *arena, program_t *program,
     return 0;
 }
 
-static int is_prog_dead(arena_t *arena, int id)
+static
+int is_prog_dead(arena_t *arena, int id)
 {
     for (uint32_t i = 0; i < arena->programs_count; i++) {
         if (id == arena->programs[i].id &&
@@ -60,7 +67,8 @@ static int is_prog_dead(arena_t *arena, int id)
     return 1;
 }
 
-static void print_header(program_t *program, arena_t *arena, int y, int dead)
+static
+void print_header(program_t *program, arena_t *arena, int y, int dead)
 {
     attron(COLOR_PAIR(4 + program->id));
     mvprintw(2, y, "%s", program->name);
@@ -73,7 +81,8 @@ static void print_header(program_t *program, arena_t *arena, int y, int dead)
     attroff(COLOR_PAIR(2 + dead));
 }
 
-static int show_header(arena_t *arena, int cols)
+static
+int show_header(arena_t *arena, int cols)
 {
     int buff[arena->programs_count];
     uint32_t count = 0;
@@ -95,7 +104,8 @@ static int show_header(arena_t *arena, int cols)
     return 0;
 }
 
-static void print_mem(arena_t *arena, uint32_t i, int x, int y)
+static
+void print_mem(arena_t *arena, uint32_t i, int x, int y)
 {
     int id = 0;
 
@@ -133,4 +143,9 @@ int show_mem(arena_t *arena)
     refresh();
     usleep(500);
     return 1;
+}
+
+void my_endwin(void)
+{
+    endwin();
 }

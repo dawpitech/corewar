@@ -10,9 +10,6 @@
 #include "my.h"
 #include "arena.h"
 #include "my_printf.h"
-#include "op.h"
-#include <stdint.h>
-#include "visuals.h"
 
 static int dump_cycle(arena_t *arena)
 {
@@ -82,8 +79,8 @@ int corewar(int argc, char const **argv)
 
     if (argc == 2 && my_strcmp(argv[1], "-h") == 0)
         return print_help();
-    if (VISUAL_MODE == 1)
-            init_ncurses();
+    if (is_visual())
+        init_ncurses();
     if (create_arena(&arena) || parse_arguments(argc, argv, &arena))
         return EXIT_FAILURE_TECH;
     if (create_arena_memory(&arena))
