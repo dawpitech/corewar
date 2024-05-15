@@ -152,5 +152,6 @@ int create_arena(arena_t *arena)
         my_memset(&arena->programs[i], 0, sizeof(program_t));
         arena->programs[i].id = i;
     }
+    arena->cycle_to_die = CYCLE_TO_DIE;
     return 0;
 }

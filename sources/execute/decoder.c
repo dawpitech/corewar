@@ -14,7 +14,7 @@
 uint8_t *decode_cb(arena_t *arena, uint32_t address)
 {
     uint8_t *params = malloc(sizeof(uint8_t) * 4);
-    uint8_t cb = arena->ram[address];
+    uint8_t cb = arena->ram[address % MEM_SIZE];
 
     params[0] = (cb & 0b11000000) >> 6;
     params[1] = (cb & 0b00110000) >> 4;

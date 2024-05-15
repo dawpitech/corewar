@@ -62,7 +62,7 @@ static int run_cycle(arena_t *arena)
             arena->programs[i].is_dead)
             continue;
         if (execute_next_inst(arena, &arena->programs[i]) ==
-            EXIT_FAILURE_TECH) {
+            69) {
             arena->exit_code = EXIT_FAILURE_TECH;
             return 1;
         }

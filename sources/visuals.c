@@ -66,9 +66,10 @@ static int show_header(arena_t *arena, int cols)
     uint32_t count = 0;
     int gap = (cols - 5) / MAX_ARGS_NUMBER;
     int dead = 0;
-    int y = 5;
+    int y = 25;
 
-    mvprintw(0, 0, "Cycle: %ld", arena->current_cycle);
+    mvprintw(0, 0, "Cycle: %ld    Cycle to die: %d/%d", arena->current_cycle,
+        arena->live_nbr, arena->cycle_to_die);
     my_memset(buff, -1, arena->programs_count * sizeof(int));
     for (uint32_t i = 0; i < arena->programs_count; i++) {
         if (!in_buffer(count, arena, &arena->programs[i], buff)) {
@@ -101,7 +102,7 @@ int show_mem(arena_t *arena)
     clear();
     show_header(arena, cols);
     for (uint32_t i = 0; i < MEM_SIZE; i++) {
-        if (i != 0 && i % cols == 0) {
+        if (i != 0 && i % 120 == 0) {
             y++;
             x = 0;
         }
@@ -116,7 +117,7 @@ int show_mem(arena_t *arena)
             mvprintw(y, x, "%02X", arena->ram[i]);
             attroff(COLOR_PAIR(1));
         }
-        x++;
+        x += 2;
     }
     refresh();
     usleep(500);

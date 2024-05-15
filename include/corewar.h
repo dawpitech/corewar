@@ -36,6 +36,8 @@ typedef struct {
     uint32_t programs_count;
     int exit_code;
     program_t *programs;
+    uint32_t live_nbr;
+    uint32_t cycle_to_die;
 } arena_t;
 typedef struct {
     int value;

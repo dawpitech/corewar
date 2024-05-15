@@ -9,6 +9,7 @@
 #include <malloc.h>
 
 #include "corewar.h"
+#include "op.h"
 
 int execute_ld(arena_t *arena, program_t *program)
 {
@@ -23,6 +24,9 @@ int execute_ld(arena_t *arena, program_t *program)
     val = htobe32(val);
     if (params->params[0].size == T_IND)
         val = params->params[0].value;
+    if ((params->params[1].value - 1) < 0 ||
+        (params->params[1].value - 1) > REG_NUMBER)
+        return 0;
     program->registers[params->params[1].value - 1] = (int) val;
     program->carry_bit = 1;
     free(params);
