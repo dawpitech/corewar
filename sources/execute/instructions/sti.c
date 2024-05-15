@@ -8,6 +8,7 @@
 #include <malloc.h>
 
 #include "corewar.h"
+#include "op.h"
 
 int execute_sti(arena_t *arena, program_t *program)
 {

@@ -21,12 +21,11 @@ int execute_add(arena_t *arena, program_t *program)
 {
     instruct_infos_t *infos = decode_instruction(arena,
         &program->program_counter);
-    int32_t a;
-    int32_t b;
-    int32_t and_result;
+    int32_t a = 0;
+    int32_t b = 0;
+    int32_t and_result = 0;
 
-    if (infos == NULL || infos->params[2].size != T_REG ||
-        infos->params[2].value > REG_NUMBER)
+    if (infos == NULL) 
         return 1;
     add_init_a_b_values(infos, program, &a, &b);
     and_result = a + b;

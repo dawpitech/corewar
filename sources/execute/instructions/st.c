@@ -21,7 +21,7 @@ int execute_st(arena_t *arena, program_t *program)
         return 1;
     val = read_uint32(arena, tmp + params->params[1].value % IDX_MOD);
     val = htobe32(val);
-    if (params->params[1].size == T_DIR)
+    if (params->params[1].size == T_IND)
         val = params->params[1].value;
     if (params->params[1].size == T_REG) {
         program->registers[params->params[1].value - 1] =
@@ -30,8 +30,9 @@ int execute_st(arena_t *arena, program_t *program)
         return 0;
     }
     write_bytes(program->registers[params->params[0].value], 4, val, arena);
-    if (params->params[1].size == T_IND)
-	arena->ram_owning[val] = program->id;
+    if (params->params[1].size == T_DIR)
+	for (int i = 0; i < 4; i++)
+	    arena->ram_owning[val + i] = program->id;
     free(params);
     return 0;
 }

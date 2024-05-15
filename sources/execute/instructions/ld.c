@@ -22,12 +22,12 @@ int execute_ld(arena_t *arena, program_t *program)
         return 1;
     val = read_uint32(arena, tmp + params->params[0].value % IDX_MOD);
     val = htobe32(val);
-    if (params->params[0].size == T_DIR)
+    if (params->params[0].size == T_IND)
         val = params->params[0].value;
     if ((params->params[1].value - 1) < 0 ||
         (params->params[1].value - 1) > REG_NUMBER)
         return 0;
-    program->registers[params->params[1].value - 1] = (int) val;
+    program->registers[params->params[1].value - 1] = val;
     program->carry_bit = 1;
     free(params);
     return 0;

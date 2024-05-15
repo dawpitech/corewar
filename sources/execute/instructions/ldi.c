@@ -42,14 +42,14 @@ int execute_ldi(arena_t *arena, program_t *program)
     if (infos == NULL || infos->params[2].size != T_REG)
         return 1;
     a = infos->params[0].value;
-    if (infos->params[0].size == T_IND) {
+    if (infos->params[0].size == T_DIR) {
 	a = read_uint32(arena, tmp + a % IDX_MOD);
 	a = htobe32(a);
     }
     if (infos->params[0].size == T_REG)
         a = program->registers[a];
     b = infos->params[1].value;
-    if (infos->params[1].size == T_IND) {
+    if (infos->params[1].size == T_DIR) {
 	b = read_uint32(arena, tmp + b % IDX_MOD);
 	b = htobe32(b);
     }

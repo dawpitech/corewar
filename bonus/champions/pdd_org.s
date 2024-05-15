@@ -2,6 +2,7 @@
 .comment "pdd"
 
 	sti	r1, %:live, %1
+	fork	%:live
 begin:	ld	%76, r1
 	ld	%40, r6
 	ld	%1, r7
