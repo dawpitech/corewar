@@ -120,6 +120,7 @@ void print_mem(arena_t *arena, uint32_t i, int x, int y)
         mvprintw(y, x, "%02X", arena->ram[i]);
         attroff(COLOR_PAIR(1));
     }
+    mvprintw(y, x + 2, " ");
 }
 
 int show_mem(arena_t *arena)
@@ -138,7 +139,7 @@ int show_mem(arena_t *arena)
             x = 0;
         }
         print_mem(arena, i, x, y);
-        x += 2;
+        x += 3;
     }
     refresh();
     usleep(500);
