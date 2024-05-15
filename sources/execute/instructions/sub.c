@@ -13,12 +13,8 @@ static
 void sub_init_a_b_values(const program_t *program,
     const instruct_infos_t *infos, int32_t *a, int32_t *b)
 {
-    (*a) = infos->params[0].value;
-    (*b) = infos->params[1].value;
-    if (infos->params[0].size == T_REG && infos->params[0].value <= REG_NUMBER)
-        (*a) = program->registers[infos->params[0].value - 1];
-    if (infos->params[1].size == T_REG && infos->params[1].value <= REG_NUMBER)
-        (*b) = program->registers[infos->params[1].value - 1];
+    (*a) = program->registers[infos->params[0].value - 1];
+    (*b) = program->registers[infos->params[1].value - 1];
 }
 
 int execute_sub(arena_t *arena, program_t *program)

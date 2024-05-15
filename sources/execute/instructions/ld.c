@@ -22,7 +22,7 @@ int execute_ld(arena_t *arena, program_t *program)
         return 1;
     val = read_uint32(arena, tmp + params->params[0].value % IDX_MOD);
     val = htobe32(val);
-    if (params->params[0].size == T_IND)
+    if (params->params[0].size == T_DIR)
         val = params->params[0].value;
     if ((params->params[1].value - 1) < 0 ||
         (params->params[1].value - 1) > REG_NUMBER)

@@ -5,9 +5,11 @@
 ** PLACEHOLDER
 */
 
+#include <endian.h>
 #include <malloc.h>
 
 #include "corewar.h"
+#include "op.h"
 
 int32_t read_int32(arena_t *arena, uint32_t tmp)
 {
@@ -40,13 +42,21 @@ int execute_ldi(arena_t *arena, program_t *program)
     if (infos == NULL || infos->params[2].size != T_REG)
         return 1;
     a = infos->params[0].value;
+    if (infos->params[0].size == T_IND) {
+	a = read_uint32(arena, tmp + a % IDX_MOD);
+	a = htobe32(a);
+    }
     if (infos->params[0].size == T_REG)
         a = program->registers[a];
     b = infos->params[1].value;
+    if (infos->params[1].size == T_IND) {
+	b = read_uint32(arena, tmp + b % IDX_MOD);
+	b = htobe32(b);
+    }
     if (infos->params[1].size == T_REG)
         b = program->registers[b];
     s = read_int32(arena, tmp);
-    program->registers[infos->params[2].value] = s;
+    program->registers[infos->params[2].value - 1] = s;
     program->carry_bit = 1;
     return 0;
 }
