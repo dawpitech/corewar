@@ -9,7 +9,6 @@
 #include <malloc.h>
 
 #include "corewar.h"
-#include "op.h"
 
 int execute_ld(arena_t *arena, program_t *program)
 {
