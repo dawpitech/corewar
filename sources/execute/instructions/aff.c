@@ -19,7 +19,7 @@ int execute_aff(arena_t *arena, program_t *program)
     if (infos == NULL)
         return 1;
     if (infos->params[0].size != T_REG ||
-        infos->params[0].value > REG_NUMBER)
+        (infos->params[0].value - 1) >= REG_NUMBER)
         return 1;
     chr = (char) (program->registers[infos->params[0].value - 1] % 256);
     if (!is_visual())

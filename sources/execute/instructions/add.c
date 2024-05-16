@@ -8,6 +8,7 @@
 #include <malloc.h>
 
 #include "corewar.h"
+#include "op.h"
 
 static
 void add_init_a_b_values(instruct_infos_t *infos, program_t *program,
@@ -25,7 +26,10 @@ int execute_add(arena_t *arena, program_t *program)
     int32_t b = 0;
     int32_t and_result = 0;
 
-    if (infos == NULL)
+    if (infos == NULL ||
+        (infos->params[0].value - 1) >= REG_NUMBER ||
+        (infos->params[1].value - 1) >= REG_NUMBER ||
+        (infos->params[2].value - 1) >= REG_NUMBER)
         return 1;
     add_init_a_b_values(infos, program, &a, &b);
     and_result = a + b;

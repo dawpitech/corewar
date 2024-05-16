@@ -9,6 +9,7 @@
 #include <endian.h>
 
 #include "corewar.h"
+#include "op.h"
 
 int execute_lld(arena_t *arena, program_t *program)
 {
@@ -17,7 +18,7 @@ int execute_lld(arena_t *arena, program_t *program)
     instruct_infos_t *params = decode_instruction(arena,
         &program->program_counter);
 
-    if (params == NULL)
+    if (params == NULL || (params->params[1].value - 1) >= REG_SIZE)
         return 1;
     val = read_uint32(arena, tmp + params->params[0].value);
     val = htobe32(val);

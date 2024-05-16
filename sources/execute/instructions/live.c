@@ -19,7 +19,8 @@ int execute_live(arena_t *arena, program_t *program)
     program->program_counter += 1;
     prog_id = read_uint32(arena, program->program_counter);
     prog_id = htobe32(prog_id);
-    if (prog_id >= MAX_ARGS_NUMBER)
+    if (prog_id >= MAX_ARGS_NUMBER || prog_id >= arena->programs_count ||
+        arena->programs[prog_id].name == NULL)
         return EXIT_FAILURE_TECH;
     program->program_counter += 4;
     arena->programs[prog_id].cycles_before_die = arena->cycle_to_die;

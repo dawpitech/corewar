@@ -10,6 +10,7 @@
 #include <stdlib.h>
 
 #include "corewar.h"
+#include "op.h"
 
 static void update_owning(arena_t *arena, instruct_infos_t *infos,
     program_t *program, int32_t addr)
@@ -28,14 +29,20 @@ int execute_sti(arena_t *arena, program_t *program)
     uint32_t b;
     uint32_t addr = 0;
 
-    if (infos == NULL)
+    if (infos == NULL || (infos->params[0].value - 1) >= REG_SIZE)
         return 1;
     a = infos->params[1].value;
-    if (infos->params[1].size == T_REG)
+    if (infos->params[1].size == T_REG) {
+        if ((infos->params[1].value - 1) >= REG_SIZE)
+            return 1;
         a = program->registers[infos->params[1].value - 1];
+    }
     b = infos->params[2].value;
-    if (infos->params[2].size == T_REG)
+    if (infos->params[2].size == T_REG) {
+        if ((infos->params[2].value - 1) >= REG_SIZE)
+            return 1;
         b = program->registers[infos->params[2].value - 1];
+    }
     addr = tmp + (a + b) % IDX_MOD;
     write_bytes(program->registers[infos->params[0].value - 1], REG_SIZE,
                 tmp + (a + b) % IDX_MOD, arena);

@@ -30,7 +30,7 @@ int execute_xor(arena_t *arena, program_t *program)
     int32_t and_result;
 
     if (infos == NULL || infos->params[2].size != T_REG ||
-        infos->params[2].value > REG_NUMBER)
+        (infos->params[2].value - 1) >= REG_NUMBER)
         return 1;
     xor_init_a_b_values(program, infos, &a, &b);
     and_result = a ^ b;

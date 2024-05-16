@@ -25,8 +25,10 @@ int execute_sub(arena_t *arena, program_t *program)
     int32_t b;
     int32_t and_result;
 
-    if (infos == NULL || infos->params[2].size != T_REG ||
-        infos->params[2].value > REG_NUMBER)
+    if (infos == NULL ||
+        (infos->params[0].value - 1) >= REG_NUMBER ||
+        (infos->params[1].value - 1) >= REG_NUMBER ||
+        (infos->params[2].value - 1) >= REG_NUMBER)
         return 1;
     sub_init_a_b_values(program, infos, &a, &b);
     and_result = a - b;
