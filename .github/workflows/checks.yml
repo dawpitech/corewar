@@ -1,0 +1,49 @@
+name: Checks
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+env:
+  SSH_PUB_KEY:
+    ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKzKKT5xCssZ38UI5VWaPOqW3ldVsg/0tDceTrCFnsd3 github.action@antoinebellanger.fr
+
+jobs:
+  coding_style:
+    runs-on: ubuntu-latest
+    container: ghcr.io/epitech/coding-style-checker:latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Check for banned functions
+        run: |
+          check.sh $(pwd) $(pwd)
+          if ! [ -s "coding-style-reports.log" ]; then
+            exit 0
+          fi
+          awk -F':' '{sub(/^ /, "", $3); print "::error file="$1",line="$2",title="$3" coding style error::"$4}' coding-style-reports.log
+          exit 1
+
+  mirror:
+    if: github.event_name != 'pull_request'
+    needs: [ coding_style ]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install SSH key
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          known_hosts: $SSH_PUB_KEY
+
+      - name: Push to epitech
+        run: |
+          git fetch --unshallow origin
+          git remote add epitech "${{ secrets.MIRROR_REPO }}"
+          git push --force epitech
