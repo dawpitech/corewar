@@ -20,7 +20,7 @@ void update_arena_programs(const arena_t *arena, int16_t addr, int id)
     arena->programs[arena->programs_count - 1].cycles_before_die =
         CYCLE_TO_DIE;
     arena->programs[arena->programs_count - 1].size = arena->programs[id].size;
-    arena->programs[arena->programs_count - 1].id = arena->programs[id].id;
+    arena->programs[arena->programs_count - 1].id = id;
 }
 
 int execute_fork(arena_t *arena, program_t *program)

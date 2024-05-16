@@ -45,7 +45,6 @@ void read_params(arena_t *arena, uint32_t *address,
     *address += 1;
     for (int i = 0; i < 4; i++) {
         param_type = params_type[i];
-        printf("[DEBUG] DECODER: TYPE IS %zu\n", param_type);
         if (is_index && param_type == T_DIR)
             param_type = T_IND;
         params->params[i].value = read_value(arena, address, param_type);

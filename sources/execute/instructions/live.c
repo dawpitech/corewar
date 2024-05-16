@@ -23,8 +23,9 @@ int execute_live(arena_t *arena, program_t *program)
         return EXIT_FAILURE_TECH;
     program->program_counter += 4;
     arena->programs[prog_id].cycles_before_die = arena->cycle_to_die;
-    my_printf("The player %d(%s) is alive.\n", prog_id,
-        arena->programs[prog_id].name);
+    if (!is_visual())
+	my_printf("The player %d(%s) is alive.\n", prog_id,
+	    arena->programs[prog_id].name);
     arena->live_nbr++;
     if (arena->live_nbr == NBR_LIVE) {
         arena->cycle_to_die -= CYCLE_DELTA;
