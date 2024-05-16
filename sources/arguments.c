@@ -103,5 +103,5 @@ int parse_arguments(int argc, const char **argv, arena_t *arena)
             return 1;
         ++i;
     }
-    return 0;
+    return arena->programs_count == 1;
 }

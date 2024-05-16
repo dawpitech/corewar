@@ -67,7 +67,7 @@ static int run_cycle(arena_t *arena)
     if (arena->current_cycle == arena->cycle_to_dump)
         return dump_cycle(arena);
     if (check_end(arena))
-        return 0;
+        return 1;
     arena->current_cycle++;
     return 0;
 }
