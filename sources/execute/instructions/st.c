@@ -21,6 +21,19 @@ static void update_owning(instruct_infos_t *params, uint32_t val,
     free(params);
 }
 
+static int update_param(program_t *program, instruct_infos_t *params)
+{
+    if (params->params[1].size == T_REG) {
+        if ((params->params[1].value - 1) >= REG_NUMBER)
+            return 1;
+        program->registers[params->params[1].value - 1] =
+                program->registers[params->params[0].value - 1];
+        free(params);
+        return 0;
+    }
+    return 0;
+}
+
 int execute_st(arena_t *arena, program_t *program)
 {
     uint32_t tmp = program->program_counter;
@@ -34,15 +47,10 @@ int execute_st(arena_t *arena, program_t *program)
     val = htobe32(val);
     if (params->params[1].size == T_IND)
         val = params->params[1].value;
-    if (params->params[1].size == T_REG) {
-        if ((params->params[1].value - 1) >= REG_NUMBER)
-            return 1;
-        program->registers[params->params[1].value - 1] =
-                program->registers[params->params[0].value - 1];
-        free(params);
-        return 0;
-    }
-    write_bytes(program->registers[params->params[0].value - 1], 4, val, arena);
+    if (update_param(program, params))
+        return 1;
+    write_bytes(program->registers[params->params[0].value - 1], 4,
+        val, arena);
     update_owning(params, val, arena, program);
     return 0;
 }

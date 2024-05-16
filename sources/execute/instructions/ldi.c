@@ -31,7 +31,7 @@ static int32_t read_int32(arena_t *arena, uint32_t tmp)
     return s;
 }
 
-static void update_a(int32_t *a, instruct_infos_t *infos,
+static int update_a(int32_t *a, instruct_infos_t *infos,
     arena_t *arena, uint32_t tmp)
 {
     *a = infos->params[0].value;
@@ -39,9 +39,20 @@ static void update_a(int32_t *a, instruct_infos_t *infos,
         *a = read_uint32(arena, tmp + *a % IDX_MOD);
         *a = htobe32(*a);
     }
+    return 0;
 }
 
-static void update_b(int32_t *b, instruct_infos_t *infos, arena_t *arena,
+static int update_a2(instruct_infos_t *infos, int32_t *a, program_t *program)
+{
+    if (infos->params[0].size == T_REG) {
+        if ((infos->params[0].value - 1) >= REG_SIZE)
+            return 1;
+        *a = program->registers[*a];
+    }
+    return 0;
+}
+
+static int update_b(int32_t *b, instruct_infos_t *infos, arena_t *arena,
     uint32_t tmp)
 {
     *b = infos->params[1].value;
@@ -49,6 +60,17 @@ static void update_b(int32_t *b, instruct_infos_t *infos, arena_t *arena,
         *b = read_uint32(arena, tmp + *b % IDX_MOD);
         *b = htobe32(*b);
     }
+    return 0;
+}
+
+static int update_b2(instruct_infos_t *infos, int32_t *b, program_t *program)
+{
+    if (infos->params[1].size == T_REG) {
+        if ((infos->params[1].value - 1) >= REG_SIZE)
+            return 1;
+        *b = program->registers[*b];
+    }
+    return 0;
 }
 
 int execute_ldi(arena_t *arena, program_t *program)
@@ -63,18 +85,10 @@ int execute_ldi(arena_t *arena, program_t *program)
     if (infos == NULL || infos->params[2].size != T_REG ||
         (infos->params[2].value - 1) >= REG_SIZE)
         return 1;
-    update_a(&a, infos, arena, tmp);
-    if (infos->params[0].size == T_REG) {
-	if ((infos->params[0].value - 1) >= REG_SIZE)
-	    return 1;
-        a = program->registers[a];
-    }
-    update_b(&b, infos, arena, tmp);
-    if (infos->params[1].size == T_REG) {
-	if ((infos->params[1].value - 1) >= REG_SIZE)
-	    return 1;
-        b = program->registers[b];
-    }
+    if (update_a(&a, infos, arena, tmp) || update_a2(infos, &a, program))
+        return 1;
+    if (update_b(&b, infos, arena, tmp) || update_b2(infos, &b, program))
+        return 1;
     s = read_int32(arena, tmp);
     program->registers[infos->params[2].value - 1] = s;
     program->carry_bit = 1;
