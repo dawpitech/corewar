@@ -83,12 +83,12 @@ int execute_lldi(arena_t *arena, program_t *program)
     int32_t b;
     int32_t s;
 
-    if (infos == NULL || (infos->params[2].value - 1) >= REG_SIZE)
+    if (infos == NULL || infos->params[2].size != T_REG)
         return 1;
     if (update_a(&a, infos, arena, tmp) || update_a2(infos, &a, program))
-        return 1;
+        return 0;
     if (update_b(&b, infos, arena, tmp) || update_b2(infos, &b, program))
-        return 1;
+        return 0;
     s = read_int(arena, tmp);
     program->registers[infos->params[2].value - 1] = s;
     program->carry_bit = 1;

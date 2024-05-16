@@ -17,7 +17,7 @@ int init_ncurses(void)
     return 1;
 }
 
-int show_mem(arena_t *arena)
+int show_mem(__attribute__((unused)) arena_t *arena)
 {
     return 1;
 }

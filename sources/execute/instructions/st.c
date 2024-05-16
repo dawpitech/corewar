@@ -41,14 +41,14 @@ int execute_st(arena_t *arena, program_t *program)
     instruct_infos_t *params = decode_instruction(arena,
             &program->program_counter);
 
-    if (params == NULL || (params->params[0].value - 1) >= REG_NUMBER)
+    if (params == NULL || params->params[0].size != T_REG)
         return 1;
     val = read_uint32(arena, tmp + params->params[1].value % IDX_MOD);
     val = htobe32(val);
     if (params->params[1].size == T_IND)
         val = params->params[1].value;
     if (update_param(program, params))
-        return 1;
+        return 0;
     write_bytes(program->registers[params->params[0].value - 1], 4,
         val, arena);
     update_owning(params, val, arena, program);

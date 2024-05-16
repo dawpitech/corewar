@@ -49,14 +49,14 @@ int execute_sti(arena_t *arena, program_t *program)
     uint32_t b;
     uint32_t addr = 0;
 
-    if (infos == NULL || (infos->params[0].value - 1) >= REG_SIZE)
+    if (infos == NULL || infos->params[0].size != T_REG)
         return 1;
     a = infos->params[1].value;
     if (update_a(infos, program, &a))
-        return 1;
+        return 0;
     b = infos->params[2].value;
     if (update_b(infos, program, &b))
-        return 1;
+        return 0;
     addr = tmp + (a + b) % IDX_MOD;
     write_bytes(program->registers[infos->params[0].value - 1], REG_SIZE,
                 tmp + (a + b) % IDX_MOD, arena);
