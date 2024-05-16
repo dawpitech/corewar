@@ -6,9 +6,9 @@
 */
 
 #include <malloc.h>
+#include <stdlib.h>
 
 #include "corewar.h"
-#include "op.h"
 
 int execute_sti(arena_t *arena, program_t *program)
 {
@@ -17,18 +17,19 @@ int execute_sti(arena_t *arena, program_t *program)
         &program->program_counter);
     uint32_t a;
     uint32_t b;
+    uint32_t addr;
 
     if (infos == NULL)
         return 1;
     a = infos->params[1].value;
     if (infos->params[1].size == T_REG)
-	a = program->registers[infos->params[1].value - 1];
+        a = program->registers[infos->params[1].value - 1];
     b = infos->params[2].value;
     if (infos->params[2].size == T_REG)
-	b = program->registers[infos->params[2].value - 1];
-    write_bytes(program->registers[infos->params[0].value - 1], 4,
-                tmp + (a +
-                b) % IDX_MOD, arena);
+        b = program->registers[infos->params[2].value - 1];
+    addr = tmp + (a + b) % IDX_MOD;
+    write_bytes(program->registers[infos->params[0].value - 1], REG_SIZE,
+                tmp + (a + b) % IDX_MOD, arena);
     for (int i = 0; i < 4; i++)
         arena->ram_owning[(tmp + (a + b) % IDX_MOD) + i] = program->id;
     free(infos);
