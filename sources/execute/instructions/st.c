@@ -7,8 +7,18 @@
 
 #include <malloc.h>
 #include <endian.h>
+#include <stdint.h>
 
 #include "corewar.h"
+
+static void update_owning(instruct_infos_t *params, uint32_t val,
+    arena_t *arena, program_t *program)
+{
+    if (params->params[1].size == T_DIR)
+        for (int i = 0; i < 4; i++)
+            arena->ram_owning[val + i] = program->id;
+    free(params);
+}
 
 int execute_st(arena_t *arena, program_t *program)
 {
@@ -30,9 +40,6 @@ int execute_st(arena_t *arena, program_t *program)
         return 0;
     }
     write_bytes(program->registers[params->params[0].value], 4, val, arena);
-    if (params->params[1].size == T_DIR)
-	for (int i = 0; i < 4; i++)
-	    arena->ram_owning[val + i] = program->id;
-    free(params);
+    update_owning(params, val, arena, program);
     return 0;
 }

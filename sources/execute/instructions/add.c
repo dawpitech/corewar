@@ -25,7 +25,7 @@ int execute_add(arena_t *arena, program_t *program)
     int32_t b = 0;
     int32_t and_result = 0;
 
-    if (infos == NULL) 
+    if (infos == NULL)
         return 1;
     add_init_a_b_values(infos, program, &a, &b);
     and_result = a + b;

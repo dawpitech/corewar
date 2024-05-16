@@ -7,11 +7,12 @@
 
 #include <endian.h>
 #include <malloc.h>
+#include <stdint.h>
 
 #include "corewar.h"
 #include "op.h"
 
-int32_t read_int32(arena_t *arena, uint32_t tmp)
+static int32_t read_int32(arena_t *arena, uint32_t tmp)
 {
     int32_t s;
 
@@ -30,6 +31,26 @@ int32_t read_int32(arena_t *arena, uint32_t tmp)
     return s;
 }
 
+static void update_a(int32_t *a, instruct_infos_t *infos,
+    arena_t *arena, uint32_t tmp)
+{
+    *a = infos->params[0].value;
+    if (infos->params[0].size == T_DIR) {
+        *a = read_uint32(arena, tmp + *a % IDX_MOD);
+        *a = htobe32(*a);
+    }
+}
+
+static void update_b(int32_t *b, instruct_infos_t *infos, arena_t *arena,
+    uint32_t tmp)
+{
+    *b = infos->params[1].value;
+    if (infos->params[1].size == T_DIR) {
+        *b = read_uint32(arena, tmp + *b % IDX_MOD);
+        *b = htobe32(*b);
+    }
+}
+
 int execute_ldi(arena_t *arena, program_t *program)
 {
     uint32_t tmp = program->program_counter;
@@ -41,18 +62,10 @@ int execute_ldi(arena_t *arena, program_t *program)
 
     if (infos == NULL || infos->params[2].size != T_REG)
         return 1;
-    a = infos->params[0].value;
-    if (infos->params[0].size == T_DIR) {
-	a = read_uint32(arena, tmp + a % IDX_MOD);
-	a = htobe32(a);
-    }
+    update_a(&a, infos, arena, tmp);
     if (infos->params[0].size == T_REG)
         a = program->registers[a];
-    b = infos->params[1].value;
-    if (infos->params[1].size == T_DIR) {
-	b = read_uint32(arena, tmp + b % IDX_MOD);
-	b = htobe32(b);
-    }
+    update_b(&b, infos, arena, tmp);
     if (infos->params[1].size == T_REG)
         b = program->registers[b];
     s = read_int32(arena, tmp);

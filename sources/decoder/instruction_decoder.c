@@ -53,8 +53,8 @@ void read_params(arena_t *arena, uint32_t *address,
     free(params_type);
 }
 
-static
-bool is_index_instruction(instruct_infos_t *infos) {
+static bool is_index_instruction(instruct_infos_t *infos)
+{
     return (infos->instruction == 0x0A || infos->instruction == 0x0B ||
             infos->instruction == 0x0E);
 }

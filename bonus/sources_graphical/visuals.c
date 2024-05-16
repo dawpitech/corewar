@@ -127,10 +127,9 @@ int show_mem(arena_t *arena)
 {
     uint32_t x = 0;
     uint32_t y = 5;
-    int rows = 0;
     int cols = 0;
 
-    getmaxyx(stdscr, rows, cols);
+    getmaxyx(stdscr, cols, cols);
     clear();
     show_header(arena, cols);
     for (uint32_t i = 0; i < MEM_SIZE; i++) {

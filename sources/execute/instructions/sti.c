@@ -6,9 +6,18 @@
 */
 
 #include <malloc.h>
+#include <stdint.h>
 #include <stdlib.h>
 
 #include "corewar.h"
+
+static void update_owning(arena_t *arena, instruct_infos_t *infos,
+    program_t *program, int32_t addr)
+{
+    for (int i = 0; i < 4; i++)
+        arena->ram_owning[addr + i] = program->id;
+    free(infos);
+}
 
 int execute_sti(arena_t *arena, program_t *program)
 {
@@ -17,7 +26,7 @@ int execute_sti(arena_t *arena, program_t *program)
         &program->program_counter);
     uint32_t a;
     uint32_t b;
-    uint32_t addr;
+    uint32_t addr = 0;
 
     if (infos == NULL)
         return 1;
@@ -30,8 +39,6 @@ int execute_sti(arena_t *arena, program_t *program)
     addr = tmp + (a + b) % IDX_MOD;
     write_bytes(program->registers[infos->params[0].value - 1], REG_SIZE,
                 tmp + (a + b) % IDX_MOD, arena);
-    for (int i = 0; i < 4; i++)
-        arena->ram_owning[(tmp + (a + b) % IDX_MOD) + i] = program->id;
-    free(infos);
+    update_owning(arena, infos, program, addr);
     return 0;
 }
