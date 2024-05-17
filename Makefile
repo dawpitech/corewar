@@ -68,6 +68,7 @@ SRC +=	./sources/execute/instructions/aff.c
 SRC	+=	./sources/decoder/instruction_decoder.c
 
 T_SRC	:=	$(SRC)
+T_SRC	+=	./tests/unit_tests.c
 
 SRC	+=	./main.c
 
@@ -75,6 +76,7 @@ GRH_SRC	:=	$(SRC)
 GRH_SRC	+=	./bonus/sources_graphical/visuals.c
 
 SRC	+=	./sources/fake_visuals.c
+T_SRC	+=	./sources/fake_visuals.c
 
 GCOVR_OUTPUT = gcovr
 
